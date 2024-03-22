@@ -51,9 +51,9 @@ div {
   color: #59ab6e;
 }
 
-._active {
-  background-color: #59ab6e;
-  color: #ffffff;
+.__active {
+  color: #26c34d !important;
+  font-weight: 400 !important;
 }
 
 .fs-16 {
@@ -115,6 +115,37 @@ div {
 .anthanhcuon::-webkit-scrollbar {
   width: 0;
   /* Chiều rộng của thanh cuộn tùy chỉnh */
+}
+
+.btn-default {
+  background-image: linear-gradient(to right,
+      #0ba360,
+      #1b8f6a,
+      #1f8455,
+      #2bb673);
+  color: white;
+}
+
+.bg-default {
+  background-image: linear-gradient(to right,
+      #0ba3a3,
+      #1d928b,
+      #26aaac,
+      #2badb6);
+  color: white;
+}
+
+#_pagination li {
+  margin: 3px;
+}
+
+#_pagination a {
+  border-radius: 2px;
+  padding: 7px 12px 7px 12px;
+  color: white;
+  font-size: 16px !important;
+  background-color: #26b879;
+  text-decoration: none !important;
 }
 
 .logo {

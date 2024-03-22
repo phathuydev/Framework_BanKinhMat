@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myProduct">
 
 <head>
-    <title>Glasses Dev</title>
+    <title>{{title}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="./assets/img/logoGlasses.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="./assets/js/angular.min.js"></script>
+    <script src="./assets/js/angular-route.min.js"></script>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="assets/js/custom.js"></script>
 </head>
 
 <body class="anthanhcuon">
@@ -37,7 +41,7 @@
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
+            <a class="navbar-brand text-success logo h1 align-self-center" href="#!home">
                 <img src="./assets/img/logoGlasses.png" width="100" alt="">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
@@ -45,343 +49,76 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between"
+            <div class="align-self-center collapse text-center navbar-collapse flex-fill d-lg-flex justify-content-lg-between"
                 id="templatemo_main_nav">
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Trang Chủ</a>
+                            <a class="nav-link" href="#!home" ng-class="{ '__active' : homeActive }">Trang Chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Sản Phẩm</a>
+                            <a class="nav-link" href="#!shop" ng-class="{ '__active' : shopActive }">Sản Phẩm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">Giới Thiệu</a>
+                            <a class="nav-link" href="#!about" ng-class="{ '__active' : aboutActive }">Giới Thiệu</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Liên Hệ</a>
+                            <a class="nav-link" href="#!contact" ng-class="{ '__active' : contactActive }">Liên Hệ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#!survey" ng-class="{ '__active' : surveyActive }">Khảo Sát</a>
                         </li>
                     </ul>
                 </div>
-                <div class="navbar align-self-center d-flex">
-                    <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Tìm Kiếm...">
-                            <button type="submit" class="input-group-text bg-success text-light">
-                                <i class="fa fa-fw fa-search text-white"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+                <div class="align-self-center d-flex justify-content-center mb-3 mt-3 mb-lg-0 mb-md-0  mt-lg-0 mt-md-0">
+                    <a class="nav-icon d-lg-inline me-lg-4 me-3" href="#" data-bs-toggle="modal"
                         data-bs-target="#templatemo_search">
                         <i class="fa fa-fw fa-search text-dark mr-2"></i>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-shopping-cart text-dark mr-1"></i>
+                    <a class="nav-icon position-relative text-decoration-none me-lg-4 me-3" href="#!admin">
+                        <i class="fa fa-fw fa-cart-plus text-dark mr-1"></i>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="./signin.html">
-                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                        <span
-                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
-                    </a>
+                    <div id="userSigning"></div>
+                    <script>
+                        if (!getUserId) {
+                            $("#userSigning").innerHTML = `<a class="nav-icon position-relative text-decoration-none" href="#!signin">
+                            <i class="fa fa-fw fa-right-to-bracket text-dark mr-3"></i>
+                            <span
+                                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
+                            </a>`;
+                        } else {
+                            $("#userSigning").innerHTML = `<a class="nav-icon position-relative text-decoration-none" href="#!profile">
+                            <i class="fa fa-fw fa-user text-dark mr-3"></i>
+                            <span
+                                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
+                            </a>`;
+                        };
+                    </script>
                 </div>
             </div>
         </div>
     </nav>
-    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog"
+    <div class="modal fade anthanhcuon" id="templatemo_search" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="w-100 pt-1 mb-5 text-right">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Tìm Kiếm...">
-                    <button type="submit" class="input-group-text bg-success text-light">
-                        <i class="fa fa-fw fa-search text-white"></i>
-                    </button>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form class="modal-content modal-body border-0 p-0">
+                <div class="input-group">
+                    <input type="text" class="form-control fs-16" ng-model="search" placeholder="Tìm Kiếm...">
                 </div>
+                <ul class="m-0 list-unstyled templatemo-accordion">
+                    <li class="m-2 text-dark"
+                        ng-repeat="product in filteredProducts = (productSearch | filter : search | limitTo : 5)">
+                        <a href="#!detail/{{product.id}}" class="text-decoration-none fs-16" style="color: crimson;">
+                            <img src="{{product.image}}" width="50" class="me-2" alt="">{{product.name}}
+                        </a>
+                    </li>
+                    <li class="m-2 fs-16" style="color:red;" ng-if="filteredProducts.length === 0">Không tìm thấy sản
+                        phẩm nào.</li>
+                </ul>
             </form>
         </div>
     </div>
-    <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="__buttonSlide active"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1" class="__buttonSlide"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2" class="__buttonSlide"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid"
-                                src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB3689_001GF_5080_3-1687503701600.png&w=3840&q=75"
-                                alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-center text-lg-start align-self-center">
-                                <h3 class="h2">Mắt Kính Thời Trang</h3>
-                                <p class="mb-5 mb-lg-0">
-                                    Trong thế giới của những chiếc mắt kính, có những bức tranh tinh tế được vẽ bằng
-                                    chính sự đam mê và tinh thần sáng tạo. Mỗi chiếc kính không chỉ là một phụ kiện thời
-                                    trang, mà còn là biểu tượng của phong cách và cái nhìn về thế giới.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid"
-                                src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB4362F_90171_4480_3-1687519157836.png&w=3840&q=75"
-                                alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left text-sm-center text-lg-start align-self-center">
-                                <h3 class="h2">Phong Cách Của Bạn</h3>
-                                <p class="mb-5 mb-lg-0">
-                                    Trong một thế giới nơi mà mọi thứ đều đang dần trở nên đồng nhất, mắt kính thời
-                                    trang là điểm nhấn cá nhân không thể thiếu. Chúng không chỉ là công cụ giúp chúng ta
-                                    nhìn rõ hơn, mà còn là biểu tượng của phong cách và cá tính riêng biệt.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid"
-                                src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB3025_919031_4950_3-1687427476810.png&w=3840&q=75"
-                                alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left text-sm-center text-lg-start align-self-center">
-                                <h3 class="h2">Biểu Tượng Hiện Đại</h3>
-                                <p class="mb-5 mb-lg-0">
-                                    Mắt kính thời trang không chỉ là một phần của trang phục, mà còn là một biểu tượng
-                                    của phong cách sống hiện đại. Chúng không chỉ giúp bảo vệ mắt khỏi ánh nắng mặt trời
-                                    hay tia UV, mà còn là một phần của cuộc sống hàng ngày.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <section class="container py-5">
-        <div class="row text-center pt-3">
-            <div class="col-lg-6 m-auto">
-                <h1 class="h1">Kính Bán Chạy</h1>
-                <p>
-                    Sản Phẩm Kính Mát Bán Chạy
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-4 p-5 mt-3 text-center">
-                <a href="shop-single1.html"><img
-                        src="https://down-vn.img.susercontent.com/file/sg-11134201-7rbkk-lom738quy1l623"
-                        class="rounded-circle img-fluid border _productHover"></a>
-                <a href="shop-single1.html" class="text-decoration-none text-dark">
-                    <h5 class="text-center mt-3">Kính Mắt Mèo</h5>
-                </a>
-                <p class="card-text text-danger m-2">250.000 VND</p>
-                <p class="text-center"><a href="shop-single1.html" class="btn btn-success">Xem Sản Phẩm</a></p>
-            </div>
-            <div class="col-12 col-md-4 p-5 mt-3 text-center">
-                <a href="shop-single2.html"><img
-                        src="https://down-vn.img.susercontent.com/file/cn-11134207-7qukw-lhx9wevsge03ed"
-                        class="rounded-circle img-fluid border _productHover"></a>
-                <a href="shop-single2.html" class="text-decoration-none text-dark">
-                    <h2 class="h5 text-center mt-3">Kính Chữ Nhật</h2>
-                </a>
-                <p class="card-text text-danger m-2">160.000 VND</p>
-                <p class="text-center"><a href="shop-single2.html" class="btn btn-success">Xem Sản Phẩm</a></p>
-            </div>
-            <div class="col-12 col-md-4 p-5 mt-3 text-center">
-                <a href="shop-single.html"><img
-                        src="https://down-vn.img.susercontent.com/file/sg-11134201-22090-g2h2cj1ak1hv73"
-                        class="rounded-circle img-fluid border _productHover"></a>
-                <a href="shop-single.html" class="text-decoration-none text-dark">
-                    <h2 class="h5 text-center mt-3">Kính Mát Hình Chữ Nhật</h2>
-                </a>
-                <p class="card-text text-danger m-2">525.000 VND</p>
-                <p class="text-center"><a href="shop-single.html" class="btn btn-success">Xem Sản Phẩm</a></p>
-            </div>
-        </div>
-    </section>
-    <section class="bg-light">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Kính Nổi Bật</h1>
-                    <p>
-                        Sản Phẩm Kính Mát Nổi Bật
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/cn-11134207-7qukw-lgw0vbm96rbzab"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Rectangle Nhựa</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính Mát Hình Chữ Nhật Chống Tia UV400 Thời Trang
-                                Cho Nữ Kính Mát
-                                Nhiều Màu Sắc</p>
-                            <p class="card-text text-danger m-2">250.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/11ac9d49e4f5a4208a175ebfee43e18b"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Rectangle Nhựa
-                                    Thông</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Thời trang kính râm hộp kính râm đen mát mẻ beach
-                                phụ nữ kính</p>
-                            <p class="card-text text-danger m-2">250.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lk9c531unz54b2"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Mắt Mèo</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính râm mát nữ nam phong cách Hàn Quốc mắt mèo cá
-                                tính chống tia
-                                UV siêu ngầu hot thời
-                                trang giá rẻ ABICA 264</p>
-                            <p class="card-text text-danger m-2">350.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/sg-11134201-22090-g2h2cj1ak1hv73"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Mát Hình Chữ Nhật</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính Mát Hình Chữ Nhật Thời Trang Cho Nam Nữ</p>
-                            <p class="card-text text-danger m-2">525.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/cn-11134207-7qukw-lgw0vbm96rbzab"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Rectangle Nhựa</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính Mát Hình Chữ Nhật Chống Tia UV400 Thời Trang
-                                Cho Nữ Kính Mát
-                                Nhiều Màu Sắc</p>
-                            <p class="card-text text-danger m-2">250.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/11ac9d49e4f5a4208a175ebfee43e18b"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Rectangle Nhựa
-                                    Thông</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Thời trang kính râm hộp kính râm đen mát mẻ beach
-                                phụ nữ kính</p>
-                            <p class="card-text text-danger m-2">250.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lk9c531unz54b2"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Mắt Mèo</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính râm mát nữ nam phong cách Hàn Quốc mắt mèo cá
-                                tính chống tia
-                                UV siêu ngầu hot thời
-                                trang giá rẻ ABICA 264</p>
-                            <p class="card-text text-danger m-2">350.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card _productHover">
-                        <a href="shop-single.html">
-                            <img src="https://down-vn.img.susercontent.com/file/sg-11134201-22090-g2h2cj1ak1hv73"
-                                class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="shop-single.html"
-                                    class="text-decoration-none text-dark fw-bold">Kính Mát Hình Chữ Nhật</a></h5>
-                            <p class="card-text m-2 truncate-text-2">Kính Mát Hình Chữ Nhật Thời Trang Cho Nam Nữ</p>
-                            <p class="card-text text-danger m-2">525.000 VND</p>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-success">Mua Ngay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <ng-view></ng-view>
     <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">
             <div class="row">
@@ -412,10 +149,11 @@
                 <div class="col-md-4 pt-5">
                     <h2 class="h2 text-light border-bottom pb-3 border-light">Khác</h2>
                     <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="index.html">Trang Chủ</a></li>
-                        <li><a class="text-decoration-none" href="about.html">Giới Thiệu</a></li>
-                        <li><a class="text-decoration-none" href="shop.html">Sản Phẩm</a></li>
-                        <li><a class="text-decoration-none" href="contact.html">Liên Hệ</a></li>
+                        <li><a class="text-decoration-none" href="#!home">Trang Chủ</a></li>
+                        <li><a class="text-decoration-none" href="#!shop">Sản Phẩm</a></li>
+                        <li><a class="text-decoration-none" href="#!about">Giới Thiệu</a></li>
+                        <li><a class="text-decoration-none" href="#!contact">Liên Hệ</a></li>
+                        <li><a class="text-decoration-none" href="#!survey">Khảo Sát</a></li>
                     </ul>
                 </div>
             </div>
@@ -463,7 +201,7 @@
         </div>
     </footer>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/dirPagination.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,77 @@
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-2">
+            <h1 class="h3 pb-3">Danh Mục</h1>
+            <ul class="list-unstyled templatemo-accordion">
+                <li>
+                    <a href="" class="collapsed d-flex justify-content-between h5 text-decoration-none pb-3 fs-16" ng-click="showAllProducts()" ng-class="{ '__active' : allActive }">Tất Cả</a>
+                    <a href="" ng-repeat="item in categories"
+                        class="collapsed d-flex justify-content-between h5 text-decoration-none pb-3 fs-16"
+                        ng-click="showProductCategory(item.id)" ng-class="{ '__active': isActive(item.id) }">
+                        {{item.name}}
+                    </a>
+                </li>
+            </ul>
+            <h1 class="h3 pb-3">Lọc Theo</h1>
+            <div>
+                <select class="form-select form-select-sm mb-4" ng-model="sortBy">
+                    <option value="price">Giá Tăng</option>
+                    <option value="-price">Giá Giảm</option>
+                    <option value="name">A - Z</option>
+                    <option value="-name">Z - A</option>
+                    <option value="image">Mặc Định</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-10" ng-show="showAllProduct">
+            <div class="row">
+                <div class="col-12 col-md-3 mb-4" dir-paginate="item in allProduct | itemsPerPage : 12 | orderBy : sortBy">
+                    <div class="card _productHover">
+                        <a href="#!detail/{{item.id}}">
+                            <img src="{{item.image}}" class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title truncate-text-1"><a href="#!detail/{{item.id}}"
+                                    class="text-decoration-none text-dark truncate-text-1">{{item.name}}</a>
+                            </h5>
+                            <p class="card-text text-danger">{{item.price | number : 0}} VND</p>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn btn-success">Mua Ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <nav aria-label="Page navigation example">
+                    <dir-pagination-controls id="_pagination"></dir-pagination-controls>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-10" ng-show="showCategoryProduct">
+            <div class="row">
+                <div class="col-12 col-md-3 mb-4" dir-paginate="item in productCategory | itemsPerPage : 12 | orderBy : sortBy">
+                    <div class="card _productHover">
+                        <a href="#!detail/{{item.id}}">
+                            <img src="{{item.image}}" class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title truncate-text-1"><a href="#!detail/{{item.id}}"
+                                    class="text-decoration-none text-dark truncate-text-1">{{item.name}}</a>
+                            </h5>
+                            <p class="card-text text-danger">{{item.price | number : 0}} VND</p>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn btn-success">Mua Ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <nav aria-label="Page navigation example">
+                    <dir-pagination-controls id="_pagination"></dir-pagination-controls>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

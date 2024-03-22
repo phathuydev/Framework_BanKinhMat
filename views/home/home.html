@@ -1,0 +1,124 @@
+<div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="__buttonSlide active"></li>
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1" class="__buttonSlide"></li>
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2" class="__buttonSlide"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="container">
+        <div class="row p-5">
+          <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+            <img class="img-fluid"
+              src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB3689_001GF_5080_3-1687503701600.png&w=3840&q=75"
+              alt="">
+          </div>
+          <div class="col-lg-6 mb-0 d-flex align-items-center">
+            <div class="text-center text-lg-start align-self-center">
+              <h3 class="h2">Mắt Kính Thời Trang</h3>
+              <p class="mb-5 mb-lg-0">
+                Trong thế giới của những chiếc mắt kính, có những bức tranh tinh tế được vẽ bằng
+                chính sự đam mê và tinh thần sáng tạo. Mỗi chiếc kính không chỉ là một phụ kiện thời
+                trang, mà còn là biểu tượng của phong cách và cái nhìn về thế giới.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <div class="container">
+        <div class="row p-5">
+          <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+            <img class="img-fluid"
+              src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB4362F_90171_4480_3-1687519157836.png&w=3840&q=75"
+              alt="">
+          </div>
+          <div class="col-lg-6 mb-0 d-flex align-items-center">
+            <div class="text-align-left text-sm-center text-lg-start align-self-center">
+              <h3 class="h2">Phong Cách Của Bạn</h3>
+              <p class="mb-5 mb-lg-0">
+                Trong một thế giới nơi mà mọi thứ đều đang dần trở nên đồng nhất, mắt kính thời
+                trang là điểm nhấn cá nhân không thể thiếu. Chúng không chỉ là công cụ giúp chúng ta
+                nhìn rõ hơn, mà còn là biểu tượng của phong cách và cá tính riêng biệt.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <div class="container">
+        <div class="row p-5">
+          <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+            <img class="img-fluid"
+              src="https://matkinh53.com/_next/image?url=https%3A%2F%2Fstorage.prod.matkinh53.com%2Fproduct%2Fimages%2FRB3025_919031_4950_3-1687427476810.png&w=3840&q=75"
+              alt="">
+          </div>
+          <div class="col-lg-6 mb-0 d-flex align-items-center">
+            <div class="text-align-left text-sm-center text-lg-start align-self-center">
+              <h3 class="h2">Biểu Tượng Hiện Đại</h3>
+              <p class="mb-5 mb-lg-0">
+                Mắt kính thời trang không chỉ là một phần của trang phục, mà còn là một biểu tượng
+                của phong cách sống hiện đại. Chúng không chỉ giúp bảo vệ mắt khỏi ánh nắng mặt trời
+                hay tia UV, mà còn là một phần của cuộc sống hàng ngày.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="container py-5">
+  <div class="row text-center pt-3">
+    <div class="col-lg-6 m-auto">
+      <h1 class="h1">Kính Bán Chạy</h1>
+      <p>
+        Sản Phẩm Kính Mát Bán Chạy
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-4 p-5 mt-3 text-center" ng-repeat="productTops in topProducts">
+      <a href="#!detail/{{productTops.id}}"><img src="{{productTops.image}}"
+          class="rounded-circle img-fluid border _productHover"></a>
+      <a href="#!detail/{{productTops.id}}" class="text-decoration-none text-dark">
+        <h5 class="text-center mt-3 truncate-text-1">{{productTops.name}}</h5>
+      </a>
+      <p class="card-text text-danger">{{productTops.price | number : 0}} VND</p>
+      <p class="text-center"><a href="#!detail/{{productTops.id}}" class="btn btn-success">Xem Sản
+          Phẩm</a></p>
+    </div>
+  </div>
+</section>
+<section class="bg-light">
+  <div class="container py-5">
+    <div class="row text-center py-3">
+      <div class="col-lg-6 m-auto">
+        <h1 class="h1">Kính Mới</h1>
+        <p>
+          Sản Phẩm Kính Mát Mới
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-3 mb-4" ng-repeat="productNews in newProducts">
+        <div class="card _productHover">
+          <a href="#!detail/{{productNews.id}}">
+            <img src="{{productNews.image}}" class="card-img-top" alt="...">
+          </a>
+          <div class="card-body text-center">
+            <h5 class="card-title"><a href="#!detail/{{productNews.id}}"
+                class="text-decoration-none text-dark fw-bold"></a></h5>
+            <p class="card-text m-2 truncate-text-1">{{productNews.name}}</p>
+            <p class="card-text text-danger">{{productNews.price | number : 0}} VND</p>
+            <div class="d-flex justify-content-center align-items-center">
+              <button type="button" class="btn btn-success">Mua Ngay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

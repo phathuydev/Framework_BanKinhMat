@@ -1,0 +1,84 @@
+<div class="container py-5">
+  <div class="d-flex justify-content-center align-items-center">
+    <div style="width: 800px; border-radius: 10px;" class="border border-dark border-2 p-4 py-5 bg-default">
+      <div class="text-center mb-4">
+        <h3 class="h3">Cập Nhật Sản Phẩm</h3>
+      </div>
+      <form method="post">
+        <div class="m-3 d-flex justify-content-center">
+          <img id="imageShowUpdate" ng-src="{{getProductUpdate.image}}" src="" width="150" alt="Ảnh Sản Phẩm">
+        </div>
+        <div class="row mb-2">
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Ảnh Sản Phẩm</label>
+              <input type="file" class="form-control fs-16" onchange="previewFileUpdate()" id="imageProductUpdate"
+                accept=".jpg, .png">
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productImageUpdateErr}}</div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Tên Sản Phẩm</label>
+              <input type="text" class="form-control fs-16" ng-model="productNameUpdate">
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNameUpdateErr}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Giá Sản Phẩm</label>
+              <input type="number" class="form-control fs-16" ng-model="productPriceUpdate" placeholder="Điền giá sản phẩm">
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productPriceUpdateErr}}</div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Danh Mục</label>
+              <select class="form-select" ng-model="productCategoryUpdate">
+                <option ng-repeat="item in categories" value="{{item.id}}">{{item.name}}</option>
+              </select>
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productCategoryUpdateErr}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Bán Chạy</label>
+              <select class="form-select" ng-model="productTopUpdate">
+                <option value="0">Không</option>
+                <option value="1">Có</option>
+              </select>
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productTopUpdateErr}}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-sm-12">
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Sản Phẩm Mới</label>
+              <select class="form-select" ng-model="productNewUpdate">
+                <option value="0">Không</option>
+                <option value="1">Có</option>
+              </select>
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNewUpdateErr}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="" class="mb-1 fs-16">Mô Tả</label>
+          <textarea class="form-control fs-16" rows="3" placeholder="Thêm mô tả cho sản phẩm"
+            ng-model="productDescribeUpdate"></textarea>
+          <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productDescribeUpdateErr}}</div>
+        </div>
+        <button type="button" class="btn btn-dark w-100 mt-3 mb-3 rounded-2" ng-click="updateProduct()">Lưu</button>
+        <div class="text-center">
+          <a href="#!admin" class="fs-16 text-decoration-none text-white">Trở Lại</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

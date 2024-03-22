@@ -1,0 +1,149 @@
+<div class="p-5">
+  <div
+    class="modal-header bg-dark bg-opacity-10 d-flex justify-content-between align-items-center p-2 border border-dark">
+    <h6 class="modal-title m-2 text-uppercase text-white fw-bold" id="exampleModalToggleLabel">Danh Sách Sản Phẩm</h6>
+    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addUser">Thêm Sản Phẩm</button>
+  </div>
+  <div class="modal-body p-0">
+    <div class="table-responsive border border-dark border-top-0">
+      <table class="table m-0 bg-default">
+        <thead>
+          <tr class="align-middle">
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Tên</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Ảnh</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Giá</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Loại</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Hot</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Mới</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16">Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="align-middle" ng-repeat="item in getAllProduct | orderBy : 'image'">
+            <td>
+              <div class="text-center"><a href="#!detail/{{item.id}}" class="text-danger fs-16" style="color: rgb(255, 255, 255) !important;">{{item.name}}</a></div>
+            </td>
+            <td>
+              <div class="text-center text-white"><img src="{{item.image}}" width="100" alt=""></div>
+            </td>
+            <td>
+              <div class="fs-16 text-center text-white">{{item.price | number : 0}} VND</div>
+            </td>
+            <td>
+              <div class="fs-16 text-center text-white">{{productCategories[item.category]}}</div>
+            </td>
+            <td>
+              <div class="fs-16 text-center" style="color: rgb(255, 0, 0); font-weight: bold !important;">{{item.top ==
+                1 ? 'Hot' :
+                ''}}</div>
+            </td>
+            <td>
+              <div class="fs-16 text-center text-white">{{item.new == 1 ? 'Mới' : ''}}</div>
+            </td>
+            <td>
+              <div class="text-center">
+                <a href="#!update/{{item.id}}"><button class="btn btn-warning mb-1">Sửa</button></a>
+                <button class="btn btn-danger mb-1" ng-click="deleteProduct(item.id)">Xóa</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Form Thêm Sản Phẩm -->
+  <div class="modal anthanhcuon fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-default">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addUserLabel">Thêm Sản Phẩm</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <div class="m-3 d-flex justify-content-center">
+              <img id="imageShow" src="" width="150" alt="Ảnh Sản Phẩm">
+            </div>
+            <div class="row mb-2">
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Ảnh Sản Phẩm <span style="color: yellow;">(*)</span></label>
+                  <input type="file" class="form-control fs-16" onchange="previewFile()" id="imageProduct"
+                    accept=".jpg, .png">
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productImageErr}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Tên Sản Phẩm <span style="color: yellow;">(*)</span></label>
+                  <input type="text" class="form-control fs-16" ng-model="productName" placeholder="Điền tên sản phẩm">
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNameErr}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Giá Sản Phẩm <span style="color: yellow;">(*)</span></label>
+                  <input type="number" class="form-control fs-16" ng-model="productPrice"
+                    placeholder="Điền giá sản phẩm">
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productPriceErr}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Danh Mục <span style="color: yellow;">(*)</span></label>
+                  <select class="form-select" ng-model="productCategory">
+                    <option ng-repeat="item in categories" value="{{item.id}}">{{item.name}}</option>
+                  </select>
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
+                    {{productCategoryErr}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Bán Chạy <span style="color: yellow;">(*)</span></label>
+                  <select class="form-select" ng-model="productTop">
+                    <option value="0">Không</option>
+                    <option value="1">Có</option>
+                  </select>
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productTopErr}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-12">
+                <div class="mb-2">
+                  <label for="" class="mb-1 fs-16">Sản Phẩm Mới <span style="color: yellow;">(*)</span></label>
+                  <select class="form-select" ng-model="productNew">
+                    <option value="0">Không</option>
+                    <option value="1">Có</option>
+                  </select>
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNewErr}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="" class="mb-1 fs-16">Mô Tả <span style="color: yellow;">(*)</span></label>
+              <textarea class="form-control fs-16" rows="3" placeholder="Thêm mô tả cho sản phẩm"
+                ng-model="productDescribe"></textarea>
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productDescribeErr}}
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="resetForm()">Đặt Lại</button>
+          <button type="button" class="btn btn-primary" ng-click="addProduct()">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

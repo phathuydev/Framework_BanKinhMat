@@ -1,0 +1,40 @@
+<div class="container py-5">
+  <div class="d-flex justify-content-center align-items-center">
+    <div style="width: 400px; border-radius: 10px;" class="border border-dark border-2 p-4 py-5">
+      <div class="text-center mb-4">
+        <h3 class="h3">Đăng Ký</h3>
+      </div>
+      <form method="post">
+        <div class="mb-2">
+          <label for="" class="mb-1 fs-16">Tên Đăng Nhập</label>
+          <input type="text" class="form-control fs-16" ng-model="username" placeholder="Tên đăng nhập của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{usernameErr}}
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="" class="mb-1 fs-16">Email</label>
+          <input type="text" class="form-control fs-16" ng-model="email" placeholder="Email của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{emailErr}}
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="" class="mb-1 fs-16">Mật Khẩu</label>
+          <input type="password" class="form-control fs-16" ng-model="password" placeholder="Mật khẩu của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{passwordErr}}
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="" class="mb-1 fs-16">Nhập Lại Mật Khẩu</label>
+          <input type="password" class="form-control fs-16" ng-model="cpassword"
+            placeholder="Nhập lại mật khẩu của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{cpasswordErr}}
+          </div>
+        </div>
+        <button type="submit" class="bn632-hover bn22 mt-3 mb-3" ng-click="signup()">Đăng Ký</button>
+        <div class="text-center">
+          <a href="#!signin" class="fs-16 text-decoration-none">Trở Lại</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

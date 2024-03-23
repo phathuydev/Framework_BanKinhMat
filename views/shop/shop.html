@@ -4,28 +4,28 @@
             <h1 class="h3 pb-3">Danh Mục</h1>
             <ul class="list-unstyled templatemo-accordion">
                 <li>
-                    <a href="" class="collapsed d-flex justify-content-between h5 text-decoration-none pb-3 fs-16" ng-click="showAllProducts()" ng-class="{ '__active' : allActive }">Tất Cả</a>
-                    <a href="" ng-repeat="item in categories"
+                    <p class="collapsed d-flex justify-content-between h5 text-decoration-none pb-3 fs-16"
+                        ng-click="showAllProducts()" ng-class="{ '__active' : allActive }">Tất Cả</p>
+                    <p ng-repeat="item in categories"
                         class="collapsed d-flex justify-content-between h5 text-decoration-none pb-3 fs-16"
                         ng-click="showProductCategory(item.id)" ng-class="{ '__active': isActive(item.id) }">
                         {{item.name}}
-                    </a>
+                    </p>
                 </li>
             </ul>
             <h1 class="h3 pb-3">Lọc Theo</h1>
-            <div>
-                <select class="form-select form-select-sm mb-4" ng-model="sortBy">
-                    <option value="price">Giá Tăng</option>
-                    <option value="-price">Giá Giảm</option>
-                    <option value="name">A - Z</option>
-                    <option value="-name">Z - A</option>
-                    <option value="image">Mặc Định</option>
-                </select>
-            </div>
+            <select class="form-select form-select-sm mb-4" ng-model="sortBy">
+                <option value="price">Giá Tăng</option>
+                <option value="-price">Giá Giảm</option>
+                <option value="name">A - Z</option>
+                <option value="-name">Z - A</option>
+                <option value="image">Mặc Định</option>
+            </select>
         </div>
         <div class="col-lg-10" ng-show="showAllProduct">
             <div class="row">
-                <div class="col-12 col-md-3 mb-4" dir-paginate="item in allProduct | itemsPerPage : 12 | orderBy : sortBy">
+                <div class="col-12 col-md-3 mb-4"
+                    dir-paginate="item in allProduct | itemsPerPage : 16 | orderBy : sortBy">
                     <div class="card _productHover">
                         <a href="#!detail/{{item.id}}">
                             <img src="{{item.image}}" class="card-img-top" alt="...">
@@ -50,7 +50,8 @@
         </div>
         <div class="col-lg-10" ng-show="showCategoryProduct">
             <div class="row">
-                <div class="col-12 col-md-3 mb-4" dir-paginate="item in productCategory | itemsPerPage : 12 | orderBy : sortBy">
+                <div class="col-12 col-md-3 mb-4"
+                    dir-paginate="item in productCategory | itemsPerPage : 12 | orderBy : sortBy">
                     <div class="card _productHover">
                         <a href="#!detail/{{item.id}}">
                             <img src="{{item.image}}" class="card-img-top" alt="...">

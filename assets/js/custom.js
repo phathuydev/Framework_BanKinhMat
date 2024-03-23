@@ -69,6 +69,29 @@ function getWithExpiry(key) {
 getWithExpiry("userId");
 // AngularJs
 var app = angular.module('myProduct', ['ngRoute', 'angularUtils.directives.dirPagination']);
+// Kiểm tra xem có đăng nhập chưa
+app.run(function ($rootScope) {
+  $rootScope.issetSignin = function (getUserId) {
+    return getUserId ? true : false;
+  };
+});
+// Lấy danh sách loại sản phẩm
+app.run(function ($rootScope, $http) {
+  $rootScope.getAllCategories = function () {
+    return $http.get(url_category)
+      .then(function (res) {
+        $rootScope.categories = res.data;
+      });
+  };
+});
+// Lấy danh sách sản phẩm
+app.run(function ($rootScope, $http) {
+  $rootScope.getAllProductSearch = function () {
+    return $http.get(url_product).then(function (res) {
+      $rootScope.product = res.data;
+    })
+  }
+});
 app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.title = 'Trang Chủ';
   $rootScope.homeActive = true;
@@ -77,12 +100,12 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
-  $http.get(url_product).then(res => {
-    $rootScope.productSearch = res.data;
-  });
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  // Lấy danh mục sản phẩm
+  $rootScope.getAllCategories();
   // Lấy tất cả sản phẩm
   $http.get(url_product).then(function (res) {
-    $scope.product = res.data;
+    $rootScope.product = res.data;
     // Lấy 3 sản phẩm bán chạy trong kho
     $scope.topProducts = $scope.product.filter(function (product) {
       return product.top == 1;
@@ -100,11 +123,10 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllProductSearch();
   // Lấy danh mục sản phẩm
-  $http.get(url_category)
-    .then(function (res) {
-      $rootScope.categories = res.data;
-    });
+  $rootScope.getAllCategories();
   // Lấy tất cả sản phẩm
   getAllProduct = function () {
     $http.get(url_product).then(function (res) {
@@ -158,6 +180,11 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllProductSearch();
+  // Lấy danh mục sản phẩm
+  $rootScope.getAllCategories();
+  // Lấy sản phẩm chi tiết
   $http.get(url_product + '/' + $routeParams.id)
     .then(function (res) {
       $scope.detailProduct = res.data;
@@ -173,7 +200,7 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
           $scope.relatedProduct = res.data;
         });
     });
-}).controller('AboutController', function ($scope, $rootScope) {
+}).controller('AboutController', function ($rootScope) {
   $rootScope.title = 'Giới Thiệu';
   $rootScope.homeActive = null;
   $rootScope.shopActive = null;
@@ -181,7 +208,10 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
-}).controller('ContactController', function ($scope, $rootScope) {
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
+}).controller('ContactController', function ($rootScope) {
   $rootScope.title = 'Liên Hệ';
   $rootScope.homeActive = null;
   $rootScope.shopActive = null;
@@ -189,6 +219,9 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = true;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
 }).controller('SurveyController', function ($scope, $rootScope, $http) {
   $rootScope.title = 'Khảo Sát';
   $rootScope.homeActive = null;
@@ -197,6 +230,9 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = true;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
   $scope.start = function () {
     $scope.id = 0;
     $scope.inProgess = true;
@@ -263,6 +299,9 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
   if (!getUserId) {
     window.location.href = "#!home";
   }
@@ -332,6 +371,9 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
   if (getUserId) {
     window.location.href = "#!home";
   } else {
@@ -365,6 +407,9 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
   $rootScope.contactActive = null;
   $rootScope.surveyActive = null;
   $rootScope.authActive = null;
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
   if (getUserId) {
     window.location.href = "#!home";
   } else {
@@ -413,151 +458,183 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
     };
   };
 }).controller('AddProductController', function ($scope, $http, $rootScope) {
-  $rootScope.title = 'Thêm Sản Phẩm';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  // Lấy tất cả sản phẩm show ra table
-  $http.get(url_product)
-    .then(function (res) {
-      $scope.getAllProduct = res.data;
-      $scope.productCategories = {};
-      $scope.getAllProduct.forEach(function (product) {
-        $http.get(url_category + '?id=' + product.category)
-          .then(function (res) {
-            $scope.productCategories[product.category] = res.data[0].name;
-          });
-      });
-    });
-  // Thêm sản phẩm
-  $scope.addProduct = function () {
-    var productImage = $('#imageShow').getAttribute('src');
-    $scope.productImageErr = '';
-    $scope.productNameErr = '';
-    $scope.productPriceErr = '';
-    $scope.productCategoryErr = '';
-    $scope.productTopErr = '';
-    $scope.productNewErr = '';
-    $scope.productDescribeErr = '';
-    if (!productImage) {
-      $scope.productImageErr = 'Vui lòng thêm ảnh sản phẩm';
-      return false;
-    } else if (!$scope.productName) {
-      $scope.productNameErr = 'Vui lòng nhập tên sản phẩm';
-      return false;
-    } else if (!$scope.productPrice) {
-      $scope.productPriceErr = 'Vui lòng thêm giá sản phẩm';
-      return false;
-    } else if ($scope.productPrice <= 0) {
-      $scope.productPriceErr = 'Giá tiền phải lớn hơn 0';
-      return false;
-    } else if (!$scope.productCategory) {
-      $scope.productCategoryErr = 'Vui lòng chọn loại sản phẩm';
-      return false;
-    } else if (!$scope.productTop) {
-      $scope.productTopErr = 'Vui lòng chọn có hoặc không';
-      return false;
-    } else if (!$scope.productNew) {
-      $scope.productNewErr = 'Vui lòng chọn có hoặc không';
-      return false;
-    } else if (!$scope.productDescribe) {
-      $scope.productDescribeErr = 'Vui lòng thêm mô tả sản phẩm';
-      return false;
-    }
-    $scope.productData = {
-      name: $scope.productName,
-      image: productImage,
-      price: $scope.productPrice,
-      category: $scope.productCategory,
-      top: $scope.productTop,
-      new: $scope.productNew,
-      describe: $scope.productDescribe
-    };
-    $http.post(url_product, $scope.productData)
-      .then(res => {
-        alert('Thêm Sản Phẩm Thành Công');
-      })
-  };
-  // Xóa dữ liệu trong form
-  $scope.resetForm = function () {
-    $('#imageShow').src = '';
-    $('#imageProduct').value = '';
-    $scope.productName = '';
-    $scope.productPrice = '';
-    $scope.productCategory = '';
-    $scope.productTop = '';
-    $scope.productNew = '';
-    $scope.productDescribe = '';
-  }
-  // Xóa sản phẩm
-  $scope.deleteProduct = function (productId) {
-    var confirmDelete = confirm('Bạn Có Chắc Chắn Muốn Xóa Sản Phẩm Này?');
-    if (confirmDelete) {
-      $http.delete(url_product + '/' + productId)
-        .then(res => {
-          alert('Xóa sản phẩm thành công');
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
+  if (!getUserId) {
+    alert('Vui lòng đăng nhập trước khi thực hiện hành động này!');
+    window.location.href = "#!signin";
+  } else {
+    $rootScope.title = 'Thêm Sản Phẩm';
+    $rootScope.homeActive = null;
+    $rootScope.shopActive = null;
+    $rootScope.aboutActive = null;
+    $rootScope.contactActive = null;
+    $rootScope.surveyActive = null;
+    $rootScope.authActive = null;
+    // Lấy tất cả sản phẩm show ra table
+    $http.get(url_product)
+      .then(function (res) {
+        $scope.getAllProduct = res.data;
+        $scope.productCategories = {};
+        $scope.getAllProduct.forEach(function (product) {
+          $http.get(url_category + '?id=' + product.category)
+            .then(function (res) {
+              $scope.productCategories[product.category] = res.data[0].name;
+            });
         });
-    }
-  };
-}).controller('UpdateProductController', function ($scope, $rootScope, $routeParams, $http) {
-  $rootScope.title = 'Cập Nhật Sản Phẩm';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $http.get(url_category)
-    .then(function (res) {
-      $scope.categories = res.data;
-    });
-  // Lấy tất cả sản phẩm show ra table
-  $http.get(url_product + '/' + $routeParams.id)
-    .then(function (res) {
-      $scope.getProductUpdate = res.data;
-      $scope.productNameUpdate = res.data.name;
-      $scope.productPriceUpdate = res.data.price;
-      $scope.productCategoryUpdate = res.data.category;
-      $scope.productTopUpdate = res.data.top;
-      $scope.productNewUpdate = res.data.new;
-      $scope.productDescribeUpdate = res.data.describe;
-    });
-  // Sửa sản phẩm
-  $scope.updateProduct = function () {
-    var productImageUpdate = $('#imageShowUpdate').getAttribute('src');
-    $scope.productNameUpdateErr = '';
-    $scope.productPriceUpdateErr = '';
-    $scope.productDescribeUpdateErr = '';
-    if (!$scope.productNameUpdate) {
-      $scope.productNameUpdateErr = 'Vui lòng nhập tên sản phẩm';
-      return false;
-    } else if (!$scope.productPriceUpdate) {
-      $scope.productPriceUpdateErr = 'Vui lòng thêm giá sản phẩm';
-      return false;
-    } else if ($scope.productPriceUpdate <= 0) {
-      $scope.productPriceUpdateErr = 'Giá tiền phải lớn hơn 0';
-      return false;
-    } else if (!$scope.productDescribeUpdate) {
-      $scope.productDescribeUpdateErr = 'Vui lòng thêm mô tả sản phẩm';
-      return false;
-    }
-    $scope.productDataUpdate = {
-      name: $scope.productNameUpdate,
-      image: productImageUpdate,
-      price: $scope.productPriceUpdate,
-      category: $scope.productCategoryUpdate,
-      top: $scope.productTopUpdate,
-      new: $scope.productNewUpdate,
-      describe: $scope.productDescribeUpdate
-    };
-    $http.put(url_product + '/' + $routeParams.id, $scope.productDataUpdate)
-      .then(res => {
-        alert('Cập Nhật Sản Phẩm Thành Công');
-        window.location.href = '#!admin';
       });
+    // Sự kiện sắp xếp dữ liệu trong bảng
+    $scope.changeSortByTable = function (sortByTable) {
+      if ($scope.sortByTable === sortByTable) {
+        $scope.sortByTable = '-' + sortByTable;
+      } else {
+        $scope.sortByTable = sortByTable;
+      }
+    }
+
+    $scope.getSortIcon = function (sortByTable) {
+      if ($scope.sortByTable === sortByTable) {
+        return 'fa-caret-up ms-1';
+      }
+      return 'fa-caret-down ms-1';
+    };
+
+    // Thêm sản phẩm
+    $scope.addProduct = function () {
+      var productImage = $('#imageShow').getAttribute('src');
+      $scope.productImageErr = '';
+      $scope.productNameErr = '';
+      $scope.productPriceErr = '';
+      $scope.productCategoryErr = '';
+      $scope.productTopErr = '';
+      $scope.productNewErr = '';
+      $scope.productDescribeErr = '';
+      if (!productImage) {
+        $scope.productImageErr = 'Vui lòng thêm ảnh sản phẩm';
+        return false;
+      } else if (!$scope.productName) {
+        $scope.productNameErr = 'Vui lòng nhập tên sản phẩm';
+        return false;
+      } else if (!$scope.productPrice) {
+        $scope.productPriceErr = 'Vui lòng thêm giá sản phẩm';
+        return false;
+      } else if ($scope.productPrice <= 0) {
+        $scope.productPriceErr = 'Giá tiền phải lớn hơn 0';
+        return false;
+      } else if (!$scope.productCategory) {
+        $scope.productCategoryErr = 'Vui lòng chọn loại sản phẩm';
+        return false;
+      } else if (!$scope.productTop) {
+        $scope.productTopErr = 'Vui lòng chọn có hoặc không';
+        return false;
+      } else if (!$scope.productNew) {
+        $scope.productNewErr = 'Vui lòng chọn có hoặc không';
+        return false;
+      } else if (!$scope.productDescribe) {
+        $scope.productDescribeErr = 'Vui lòng thêm mô tả sản phẩm';
+        return false;
+      } else {
+        $scope.productData = {
+          name: $scope.productName,
+          image: productImage,
+          price: $scope.productPrice,
+          category: $scope.productCategory,
+          top: $scope.productTop,
+          new: $scope.productNew,
+          describe: $scope.productDescribe
+        };
+        $http.post(url_product, $scope.productData)
+          .then(res => {
+            alert('Thêm Sản Phẩm Thành Công');
+          })
+      };
+    };
+    // Xóa dữ liệu trong form
+    $scope.resetForm = function () {
+      $('#imageShow').src = '';
+      $('#imageProduct').value = '';
+      $scope.productName = '';
+      $scope.productPrice = '';
+      $scope.productCategory = '';
+      $scope.productTop = '';
+      $scope.productNew = '';
+      $scope.productDescribe = '';
+    }
+    // Xóa sản phẩm
+    $scope.deleteProduct = function (productId) {
+      var confirmDelete = confirm('Bạn Có Chắc Chắn Muốn Xóa Sản Phẩm Này?');
+      if (confirmDelete) {
+        $http.delete(url_product + '/' + productId)
+          .then(res => {
+            alert('Xóa sản phẩm thành công');
+          });
+      }
+    };
+  }
+}).controller('UpdateProductController', function ($scope, $rootScope, $routeParams, $http) {
+  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
+  $rootScope.getAllCategories();
+  $rootScope.getAllProductSearch();
+  if (!getUserId) {
+    window.location.href = "#!home";
+  } else {
+    $rootScope.title = 'Cập Nhật Sản Phẩm';
+    $rootScope.homeActive = null;
+    $rootScope.shopActive = null;
+    $rootScope.aboutActive = null;
+    $rootScope.contactActive = null;
+    $rootScope.surveyActive = null;
+    $rootScope.authActive = null;
+    $http.get(url_category)
+      .then(function (res) {
+        $scope.categories = res.data;
+      });
+    // Lấy tất cả sản phẩm show ra table
+    $http.get(url_product + '/' + $routeParams.id)
+      .then(function (res) {
+        $scope.getProductUpdate = res.data;
+        $scope.productNameUpdate = res.data.name;
+        $scope.productPriceUpdate = res.data.price;
+        $scope.productCategoryUpdate = res.data.category;
+        $scope.productTopUpdate = res.data.top;
+        $scope.productNewUpdate = res.data.new;
+        $scope.productDescribeUpdate = res.data.describe;
+      });
+    // Sửa sản phẩm
+    $scope.updateProduct = function () {
+      var productImageUpdate = $('#imageShowUpdate').getAttribute('src');
+      $scope.productNameUpdateErr = '';
+      $scope.productPriceUpdateErr = '';
+      $scope.productDescribeUpdateErr = '';
+      if (!$scope.productNameUpdate) {
+        $scope.productNameUpdateErr = 'Vui lòng nhập tên sản phẩm';
+        return false;
+      } else if (!$scope.productPriceUpdate) {
+        $scope.productPriceUpdateErr = 'Vui lòng thêm giá sản phẩm';
+        return false;
+      } else if ($scope.productPriceUpdate <= 0) {
+        $scope.productPriceUpdateErr = 'Giá tiền phải lớn hơn 0';
+        return false;
+      } else if (!$scope.productDescribeUpdate) {
+        $scope.productDescribeUpdateErr = 'Vui lòng thêm mô tả sản phẩm';
+        return false;
+      }
+      $scope.productDataUpdate = {
+        name: $scope.productNameUpdate,
+        image: productImageUpdate,
+        price: $scope.productPriceUpdate,
+        category: $scope.productCategoryUpdate,
+        top: $scope.productTopUpdate,
+        new: $scope.productNewUpdate,
+        describe: $scope.productDescribeUpdate
+      };
+      $http.put(url_product + '/' + $routeParams.id, $scope.productDataUpdate)
+        .then(res => {
+          alert('Cập Nhật Sản Phẩm Thành Công');
+          window.location.href = '#!admin';
+        });
+    };
   };
 }).config(function ($routeProvider) {
   $routeProvider

@@ -6,22 +6,29 @@
   </div>
   <div class="modal-body p-0">
     <div class="table-responsive border border-dark border-top-0">
-      <table class="table m-0 bg-default">
+      <table class="table m-0 btn-default">
         <thead>
           <tr class="align-middle">
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Tên</th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Ảnh</th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Giá</th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Loại</th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Hot</th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Mới</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('name')">Tên
+              <i class="fa" ng-class="getSortIcon('name')"></i></th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('image')">Ảnh
+              <i class="fa" ng-class="getSortIcon('image')"></i></th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('price')">Giá
+              <i class="fa" ng-class="getSortIcon('price')"></i></th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('category')">
+              Loại <i class="fa" ng-class="getSortIcon('category')"></i></th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('top')">Hot
+              <i class="fa" ng-class="getSortIcon('top')"></i></th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('new')">Mới
+              <i class="fa" ng-class="getSortIcon('new')"></i></th>
             <th scope="col" width="12.5%" class="text-center text-white fs-16">Hành Động</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="align-middle" ng-repeat="item in getAllProduct | orderBy : 'image'">
+          <tr class="align-middle" ng-repeat="item in getAllProduct | orderBy : sortByTable">
             <td>
-              <div class="text-center"><a href="#!detail/{{item.id}}" class="text-danger fs-16" style="color: rgb(255, 255, 255) !important;">{{item.name}}</a></div>
+              <div class="text-center"><a href="#!detail/{{item.id}}" class="text-danger fs-16"
+                  style="color: rgb(255, 255, 255) !important;">{{item.name}}</a></div>
             </td>
             <td>
               <div class="text-center text-white"><img src="{{item.image}}" width="100" alt=""></div>
@@ -55,7 +62,7 @@
   <div class="modal anthanhcuon fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="addUserLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content bg-default">
+      <div class="modal-content btn-default">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="addUserLabel">Thêm Sản Phẩm</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,7 +70,7 @@
         <div class="modal-body">
           <form method="post">
             <div class="m-3 d-flex justify-content-center">
-              <img id="imageShow" src="" width="150" alt="Ảnh Sản Phẩm">
+              <img id="imageShow" src="" width="150" class="fs-16" alt="Ảnh Sản Phẩm">
             </div>
             <div class="row mb-2">
               <div class="col-lg-6 col-sm-12">
@@ -71,7 +78,8 @@
                   <label for="" class="mb-1 fs-16">Ảnh Sản Phẩm <span style="color: yellow;">(*)</span></label>
                   <input type="file" class="form-control fs-16" onchange="previewFile()" id="imageProduct"
                     accept=".jpg, .png">
-                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productImageErr}}
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
+                    {{productImageErr}}
                   </div>
                 </div>
               </div>
@@ -90,7 +98,8 @@
                   <label for="" class="mb-1 fs-16">Giá Sản Phẩm <span style="color: yellow;">(*)</span></label>
                   <input type="number" class="form-control fs-16" ng-model="productPrice"
                     placeholder="Điền giá sản phẩm">
-                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productPriceErr}}
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
+                    {{productPriceErr}}
                   </div>
                 </div>
               </div>

@@ -8,9 +8,9 @@
 </div>
 
 <div class="container my-5" id="content">
-    <div class="row mb-4" ng-show="!inProgess">
+    <div class="row mb-4" ng-show="!Survey.inProgess">
         <div class="col text-center">
-            <button class="btn btn-default" ng-click="start()">Mở Khảo Sát</button>
+            <button class="btn btn-default" ng-click="Survey.start()">Mở Khảo Sát</button>
         </div>
     </div>
     <!-- <div class="row mb-3">
@@ -18,27 +18,26 @@
             <h2><i class="fas fa-clock" style="color: #23B5E1;"></i> 10:12:00</h2>
         </div>
     </div> -->
-    <div class="row" ng-show="inProgess">
+    <div class="row" ng-show="Survey.inProgess">
         <div class="col">
             <div class="card border-info">
                 <div class="card-header text-white btn-default">
                     <img src="images/logos/JAAV.png" width="30" class="border border-primary rounded-lg" alt="">
-                    <span>{{questions}}</span>
-                    <span class="float-right badge">{{id + 1}}/{{countQues}}</span>
+                    <span>{{Survey.questions}}</span>
+                    <span class="float-right badge">{{Survey.id + 1}}/{{Survey.countQues}}</span>
                 </div>
                 <div class="card-body">
-                    <div class="mb-2" ng-repeat="item in options | limitTo : 3 : 0">
+                    <div class="mb-2" ng-repeat="item in Survey.options | limitTo : 3 : 0">
                         <label for="checkbox{{item.id}}" class="fs-16">
-                            <input type="hidden" name="que" value="{{questions}}">
+                            <input type="hidden" name="que" value="{{Survey.questions}}">
                             <input type="radio" name="answer" id="checkbox{{item.id}}" class="me-1"
                                 value="{{item.text}}">{{item.text}}
                         </label>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-dark" ng-click="nextQuestion()"  ng-if="id !== 2">Tiếp Tục</button>
-                    <button class="btn btn-dark" ng-click="nextQuestion()" ng-if="id == 2">Hoàn Thành</button>
-                    <!-- <button class="btn btn-default" ng-click="prevQuestion()" ng-if="id !== 0">Trở Lại</button> -->
+                    <button class="btn btn-dark" ng-click="Survey.nextQuestion()"  ng-if="Survey.id !== 2">Tiếp Tục</button>
+                    <button class="btn btn-dark" ng-click="Survey.nextQuestion()" ng-if="Survey.id == 2">Hoàn Thành</button>
                 </div>
             </div>
         </div>

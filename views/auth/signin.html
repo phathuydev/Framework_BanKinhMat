@@ -7,16 +7,16 @@
       <form method="post">
         <div class="mb-2">
           <label for="" class="mb-1 fs-16">Tên Đăng Nhập</label>
-          <input type="text" class="form-control fs-16" ng-model="username" placeholder="Tên đăng nhập của bạn">
-          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{usernameErr}}
+          <input type="text" class="form-control fs-16" ng-model="Signin.username" placeholder="Tên đăng nhập của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{Signin.usernameErr}}
           </div>
         </div>
         <div class="mb-3">
           <label for="" class="mb-1 fs-16">Mật Khẩu</label>
-          <input type="password" class="form-control fs-16" ng-model="password" placeholder="Mật khẩu của bạn">
-          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{passwordErr}}
+          <input type="password" class="form-control fs-16" ng-model="Signin.password" placeholder="Mật khẩu của bạn">
+          <div style="color: red; font-size: 16px !important; margin-top: 5px !important;">{{Signin.passwordErr}}
           </div>
-          <button type="submit" class="bn632-hover bn22 mt-3 mb-3" ng-click="signin()">Đăng Nhập</button>
+          <button type="submit" class="bn632-hover bn22 mt-3 mb-3" ng-click="Signin.signin()">Đăng Nhập</button>
           <div class="text-center">
             <span class="fs-16">Chưa Có Tài Khoản ? <a href="#!signup" class="fs-16 text-decoration-none">Đăng Ký
                 Ngay</a></span>

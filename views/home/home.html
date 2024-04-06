@@ -82,12 +82,12 @@
   <div class="row">
     <div class="col-12 col-md-4 p-5 mt-3 text-center" ng-repeat="productTops in topProducts">
       <a href="#!detail/{{productTops.id}}"><img src="{{productTops.image}}"
-          class="rounded-circle img-fluid border _productHover"></a>
+          class="rounded-circle img-fluid border _productHover" width="80%"></a>
       <a href="#!detail/{{productTops.id}}" class="text-decoration-none text-dark">
         <h5 class="text-center mt-3 truncate-text-1">{{productTops.name}}</h5>
       </a>
       <p class="card-text text-danger">{{productTops.price | number : 0}} VND</p>
-      <p class="text-center"><a href="#!detail/{{productTops.id}}" class="btn btn-success">Xem Sản
+      <p class="text-center"><a href="#!detail/{{productTops.id}}" class="btn btn-dark">Xem Sản
           Phẩm</a></p>
     </div>
   </div>
@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-3 mb-4" ng-repeat="productNews in newProducts">
+      <div class="col-12 col-md-2 mb-4" ng-repeat="productNews in newProducts">
         <div class="card _productHover">
           <a href="#!detail/{{productNews.id}}">
             <img src="{{productNews.image}}" class="card-img-top" alt="...">
@@ -111,10 +111,10 @@
           <div class="card-body text-center">
             <h5 class="card-title"><a href="#!detail/{{productNews.id}}"
                 class="text-decoration-none text-dark fw-bold"></a></h5>
-            <p class="card-text m-2 truncate-text-1">{{productNews.name}}</p>
-            <p class="card-text text-danger">{{productNews.price | number : 0}} VND</p>
+            <p class="card-text m-2 truncate-text-1 fs-16">{{productNews.name}}</p>
+            <p class="card-text text-danger fs-16">{{productNews.price | number : 0}} VND</p>
             <div class="d-flex justify-content-center align-items-center">
-              <button type="button" class="btn btn-success">Mua Ngay</button>
+              <button type="button" class="btn btn-dark">Mua Ngay</button>
             </div>
           </div>
         </div>

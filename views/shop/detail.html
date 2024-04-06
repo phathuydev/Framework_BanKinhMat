@@ -3,29 +3,29 @@
         <div class="row">
             <div class="col-lg-5 mt-5">
                 <div class="card mb-3">
-                    <img class="card-img img-fluid" src="{{detailProduct.image}}" alt="" id="product-detail">
+                    <img class="card-img img-fluid" src="{{Detail.detailProduct.image}}" alt="" id="product-detail">
                 </div>
             </div>
             <div class="col-lg-7 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="h2">{{detailProduct.name}}</h1>
-                        <p class="h3 py-2" style="color: red;">{{detailProduct.price | number : 0}} VND</p>
+                        <h1 class="h2">{{Detail.detailProduct.name}}</h1>
+                        <p class="h3 py-2" style="color: red;">{{Detail.detailProduct.price | number : 0}} VND</p>
                         <ul class="list-inline mb-0">
                             <li class="list-inline-item">
                                 <h6>Loại:</h6>
                             </li>
                             <li class="list-inline-item">
-                                <p class="m-0 fs-16" style="color: black;">{{categoryName}}</p>
+                                <p class="m-0 fs-16" style="color: black;">{{Detail.categoryName}}</p>
                             </li>
                         </ul>
                         <ul class="list-inline mt-2">
                             <li class="list-inline-item">
-                                <p class="">{{detailProduct.describe}}</p>
+                                <p class="">{{Detail.detailProduct.describe}}</p>
                             </li>
                         </ul>
                         <div class="pb-3">
-                            <button type="submit" class="btn btn-success" name="submit"><i
+                            <button type="submit" class="btn btn-dark" name="submit"><i
                                     class="fa fa-shopping-cart me-2"></i>Thêm Vào Giỏ Hàng</button>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
             <h4>Sản Phẩm Liên Quan</h4>
         </div>
         <div class="row">
-            <div class="col-12 col-md-3 mb-4" ng-repeat="relatedProducts in relatedProduct">
+            <div class="col-12 col-md-2 mb-4" ng-repeat="relatedProducts in prodCategory">
                 <div class="card _productHover">
                     <a href="#!detail/{{relatedProducts.id}}">
                         <img src="{{relatedProducts.image}}" class="card-img-top" alt="...">
@@ -48,10 +48,10 @@
                     <div class="card-body text-center">
                         <h5 class="card-title"><a href="#!detail/{{relatedProducts.id}}"
                                 class="text-decoration-none text-dark fw-bold"></a></h5>
-                        <p class="card-text m-2 truncate-text-1">{{relatedProducts.name}}</p>
-                        <p class="card-text text-danger">{{relatedProducts.price | number : 0}} VND</p>
+                        <p class="card-text m-2 truncate-text-1 fs-16">{{relatedProducts.name}}</p>
+                        <p class="card-text text-danger fs-16">{{relatedProducts.price | number : 0}} VND</p>
                         <div class="d-flex justify-content-center align-items-center">
-                            <button type="button" class="btn btn-success">Mua Ngay</button>
+                            <button type="button" class="btn btn-dark">Mua Ngay</button>
                         </div>
                     </div>
                 </div>

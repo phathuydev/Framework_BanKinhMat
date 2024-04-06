@@ -23,7 +23,7 @@
 </nav>
 <nav class="navbar navbar-expand-lg navbar-light shadow">
   <div class="container d-flex justify-content-between align-items-center">
-    <a class="navbar-brand text-success logo h1 align-self-center" href="#!home">
+    <a class="navbar-brand text-success logo h1 align-self-center" href="#!/">
       <img src="./assets/img/logoGlasses.png" width="100" alt="">
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
@@ -36,19 +36,19 @@
       <div class="flex-fill">
         <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#!home" ng-class="{ '__active' : homeActive }">Trang Chủ</a>
+            <a class="nav-link" href="#!/">Trang Chủ</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!shop" ng-class="{ '__active' : shopActive }">Sản Phẩm</a>
+            <a class="nav-link" href="#!shop">Sản Phẩm</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!about" ng-class="{ '__active' : aboutActive }">Giới Thiệu</a>
+            <a class="nav-link" href="#!about">Giới Thiệu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!contact" ng-class="{ '__active' : contactActive }">Liên Hệ</a>
+            <a class="nav-link" href="#!contact">Liên Hệ</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#!survey" ng-class="{ '__active' : surveyActive }">Khảo Sát</a>
+            <a class="nav-link" href="#!survey">Khảo Sát</a>
           </li>
         </ul>
       </div>
@@ -85,14 +85,15 @@
       <div class="input-group">
         <input type="text" class="form-control fs-16" ng-model="search" placeholder="Tìm Kiếm...">
       </div>
-      <ul class="m-0 list-unstyled templatemo-accordion">
-        <li class="m-2 text-dark"
-          ng-repeat="item in filteredProducts = (product | filter : search | limitTo : 5)">
-          <a href="#!detail/{{item.id}}" class="text-decoration-none fs-16" style="color: crimson;">
-            <img src="{{item.image}}" width="50" class="me-2" alt="">{{item.name}}
-          </a>
-        </li>
-        <li class="m-2 fs-16" style="color:red;" ng-if="filteredProducts.length === 0">Không tìm thấy sản
+      <ul class="m-0 list-unstyled templatemo-accordion" ng-if="search !== ''">
+        <span ng-repeat="item in filteredProducts = (product | filter : search | limitTo : 5)"
+          ng-click="headerDetail(item.id)" class="text-decoration-none _mouse">
+          <li class="_hoverSearch p-2 fs-16">
+            <i class="fa fa-search me-2 fs-16"></i>{{item.name}}
+          </li>
+        </span>
+        <li class="m-2 fs-16" style="color:red; margin-left: 15px !important;" ng-if="filteredProducts.length === 0">
+          Không tìm thấy sản
           phẩm nào.</li>
       </ul>
     </div>

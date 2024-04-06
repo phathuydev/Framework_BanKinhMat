@@ -5,564 +5,487 @@ const url_category = 'http://localhost:3000/categories';
 const url_user = 'http://localhost:3000/users';
 const url_questions = 'http://localhost:3000/questions';
 const url_answer = 'http://localhost:3000/answer';
-// Lấy userId từ localStorage
 const getUserId = localStorage.getItem("userId");
-const userIdData = JSON.parse(getUserId);
-// Set src cho thẻ img khi select ảnh form thêm
-function previewFile() {
-  const preview = $("#imageShow");
-  const file = $("#imageProduct").files[0];
-  const reader = new FileReader();
-  reader.addEventListener(
-    "load",
-    function () {
-      preview.src = reader.result;
-    },
-    false
-  );
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-}
-// Set src cho thẻ img khi select ảnh form add
-function previewFileUpdate() {
-  const preview = $("#imageShowUpdate");
-  const file = $("#imageProductUpdate").files[0];
-  const reader = new FileReader();
-  reader.addEventListener(
-    "load",
-    function () {
-      preview.src = reader.result;
-    },
-    false
-  );
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-}
-// Set item, value, thời gian hết hạn cho localStorage
-function setWithExpiry(key, value, ttl) {
-  const now = new Date();
-  const item = {
-    value: value,
-    expiry: now.getTime() + ttl // Thời gian hết hạn
-  };
-  localStorage.setItem(key, JSON.stringify(item));
-}
-// Xóa localStorage UserId khi quá thời gian set
-function getWithExpiry(key) {
-  const itemStr = localStorage.getItem(key);
-  // Nếu không có mục nào với key hoặc đã hết hạn, trả về null
-  if (!itemStr) {
-    return null;
-  }
-  const item = JSON.parse(itemStr);
-  const now = new Date();
-  // Nếu thời gian hết hạn, xóa mục và trả về null
-  if (now.getTime() > item.expiry) {
-    localStorage.removeItem(key);
-    return null;
-  }
-  return item.value;
-}
-// Gọi hàm xóa localStorage UserId
-getWithExpiry("userId");
-// AngularJs
+const getUserName = localStorage.getItem("userName");
+
+// Định nghĩa AngularJs
 var app = angular.module('myProduct', ['ngRoute', 'angularUtils.directives.dirPagination']);
-// Kiểm tra xem có đăng nhập chưa
-app.run(function ($rootScope) {
-  $rootScope.issetSignin = function (getUserId) {
-    return getUserId ? true : false;
-  };
-});
-// Lấy danh sách loại sản phẩm
+
+// Khởi chạy 1 khối mã khi trang web được khơi tạo
 app.run(function ($rootScope, $http) {
+  // Hàm để lấy tất cả các danh mục
   $rootScope.getAllCategories = function () {
     return $http.get(url_category)
       .then(function (res) {
         $rootScope.categories = res.data;
       });
   };
-});
-// Lấy danh sách sản phẩm
-app.run(function ($rootScope, $http) {
-  $rootScope.getAllProductSearch = function () {
+
+  // Hàm để lấy tất cả sản phẩm trong một danh mục
+  $rootScope.getProdCategory = function (categoryId) {
+    return $http.get(url_product + '?category=' + categoryId)
+      .then(function (res) {
+        $rootScope.prodCategory = res.data;
+      });
+  };
+
+  // Hàm để lấy thông tin của một sản phẩm cụ thể
+  $rootScope.getProductOne = function (productId) {
+    return $http.get(url_product + '/' + productId)
+      .then(function (res) {
+        $rootScope.getProduct = res.data;
+        $rootScope.productName = res.data.name;
+        $rootScope.productPrice = res.data.price;
+        $rootScope.productCategory = res.data.category;
+        $rootScope.productTop = res.data.top;
+        $rootScope.productNew = res.data.new;
+        $rootScope.productDescribe = res.data.describe;
+      });
+  };
+
+  // Hàm để chuyển hướng đến trang chi tiết sản phẩm và làm tải lại trang
+  $rootScope.headerDetail = function (productId) {
+    window.location.href = '#!detail/' + productId;
+    window.location.reload();
+  };
+
+  // Hàm để lấy tất cả sản phẩm và phân loại các sản phẩm
+  $rootScope.getAllPrd = function () {
     return $http.get(url_product).then(function (res) {
       $rootScope.product = res.data;
-    })
-  }
-});
-app.controller('HomeController', function ($scope, $rootScope, $http) {
-  $rootScope.title = 'Trang Chủ';
-  $rootScope.homeActive = true;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  // Lấy danh mục sản phẩm
-  $rootScope.getAllCategories();
-  // Lấy tất cả sản phẩm
-  $http.get(url_product).then(function (res) {
-    $rootScope.product = res.data;
-    // Lấy 3 sản phẩm bán chạy trong kho
-    $scope.topProducts = $scope.product.filter(function (product) {
-      return product.top == 1;
-    });
-    // Lấy tất cả sản phẩm mới trong kho
-    $scope.newProducts = $scope.product.filter(function (product) {
-      return product.new == 1;
-    });
-  });
-}).controller('ShopController', function ($scope, $http, $rootScope) {
-  $rootScope.title = 'Sản Phẩm';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = true;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllProductSearch();
-  // Lấy danh mục sản phẩm
-  $rootScope.getAllCategories();
-  // Lấy tất cả sản phẩm
-  getAllProduct = function () {
-    $http.get(url_product).then(function (res) {
-      $scope.allProduct = res.data;
-      $scope.showCategoryProduct = false;
-      $scope.showAllProduct = true;
-      $scope.allActive = true;
-      $scope.activeCategoryId = null;
-    });
-  }
-  // Lấy tất cả sản phẩm
-  $scope.showAllProducts = function () {
-    getAllProduct();
-  }
-  // Lấy sản phẩm theo category id
-  $scope.showProductCategory = function (category_id) {
-    $http.get(url_product + '?category=' + category_id).then(function (res) {
-      $http.get(url_product).then(res => {
-        $rootScope.productSearch = res.data;
+      // Lấy 3 sản phẩm bán chạy trong kho
+      $rootScope.topProducts = $rootScope.product.filter(function (product) {
+        return product.top == 1;
       });
-      $scope.productCategory = res.data;
-      $scope.showCategoryProduct = true;
-      $scope.showAllProduct = false;
-      $scope.allActive = false;
-      $scope.activeCategoryId = category_id;
+      // Lấy tất cả sản phẩm mới trong kho
+      $rootScope.newProducts = $rootScope.product.filter(function (product) {
+        return product.new == 1;
+      });
     });
+  };
+
+  // Hàm để đăng nhập và lưu thông tin người dùng vào localStorage
+  $rootScope.signin = function (username, password) {
+    $http.get(url_user + '?name=' + username + '&password=' + password).then(res => {
+      var getUserSignined = res.data;
+      if (getUserSignined && getUserSignined.length > 0 && getUserSignined[0].name && getUserSignined[0].password) {
+        // Set thời gian tồn tại của localStorage userId
+        localStorage.setItem("userId", getUserSignined[0].id);
+        localStorage.setItem("userName", getUserSignined[0].name);
+        window.location.href = "index.html";
+      } else {
+        alert('Tài khoản không tồn tại');
+      };
+    });
+  };
+
+  // Kiểm tra xem người dùng đã đăng nhập hay chưa
+  $rootScope.issetUserId = getUserId ? true : false;
+
+  // Giá trị tìm kiếm ban đầu là rỗng
+  $rootScope.search = '';
+});
+
+// Trang chủ
+app.controller('HomeController', function ($rootScope) {
+  $rootScope.title = 'Trang Chủ';
+  $rootScope.getAllPrd();
+});
+
+// Sản phẩm
+app.controller('ShopController', function ($rootScope) {
+  $rootScope.title = 'Sản Phẩm';
+  var vm = this;
+  // Lấy tất cả sản phẩm
+  vm.getAllProduct = function () {
+    $rootScope.getAllPrd();
+    vm.showCategoryProduct = false;
+    vm.showAllProduct = true;
+    vm.allActive = true;
+    vm.activeCategoryId = null;
+  }
+  // Hien thi tat ca san pham
+  vm.getAllProduct();
+  // Lấy sản phẩm theo category id
+  vm.showProductCategory = function (category_id) {
+    $rootScope.getProdCategory(category_id);
+    vm.showCategoryProduct = true;
+    vm.showAllProduct = false;
+    vm.allActive = false;
+    vm.activeCategoryId = category_id;
   }
   // Gán active cho loại
-  $scope.isActive = function (category_id) {
-    return $scope.activeCategoryId === category_id;
+  vm.isActive = function (category_id) {
+    return vm.activeCategoryId === category_id;
   }
   // Lọc sản phẩm
-  $scope.sortBy = 'image';
-  $scope.$watch('sortBy', function (newValue) {
+  vm.sortBy = 'image';
+  $rootScope.$watch('sortBy', function (newValue) {
     if (newValue === 'price') {
-      $scope.sortBy = 'price';
+      vm.sortBy = 'price';
     } else if (newValue === '-price') {
-      $scope.sortBy = '-price';
+      vm.sortBy = '-price';
     } else if (newValue === 'name') {
-      $scope.sortBy = 'name';
+      vm.sortBy = 'name';
     } else if (newValue === '-name') {
-      $scope.sortBy = '-name';
+      vm.sortBy = '-name';
     }
   });
-  getAllProduct();
-}).controller('DetailController', function ($scope, $routeParams, $http, $rootScope) {
-  $rootScope.title = 'Chi Tiết Sản Phẩm';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = true;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllProductSearch();
-  // Lấy danh mục sản phẩm
   $rootScope.getAllCategories();
+});
+
+// Chi tiết sản phẩm
+app.controller('DetailController', function ($routeParams, $http, $rootScope) {
+  $rootScope.title = 'Chi Tiết Sản Phẩm';
+  var vm = this;
   // Lấy sản phẩm chi tiết
   $http.get(url_product + '/' + $routeParams.id)
     .then(function (res) {
-      $scope.detailProduct = res.data;
+      vm.detailProduct = res.data;
       // Lấy tên loại
-      var categoryId = $scope.detailProduct.category;
+      var categoryId = vm.detailProduct.category;
       $http.get(url_category + '?id=' + categoryId)
         .then(function (res) {
-          $scope.categoryName = res.data[0].name;
+          vm.categoryName = res.data[0].name;
         });
       // Lấy các sản phẩm liên quan
-      $http.get(url_product + '?category=' + categoryId)
-        .then(function (res) {
-          $scope.relatedProduct = res.data;
-        });
+      $rootScope.getProdCategory(categoryId);
     });
-}).controller('AboutController', function ($rootScope) {
+});
+
+// Giới thiệu
+app.controller('AboutController', function ($rootScope) {
   $rootScope.title = 'Giới Thiệu';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = true;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-}).controller('ContactController', function ($rootScope) {
+});
+
+// Liên hệ
+app.controller('ContactController', function ($rootScope) {
   $rootScope.title = 'Liên Hệ';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = true;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-}).controller('SurveyController', function ($scope, $rootScope, $http) {
+});
+
+// Khảo sát
+app.controller('SurveyController', function ($rootScope, $http) {
   $rootScope.title = 'Khảo Sát';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = true;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  $scope.start = function () {
-    $scope.id = 0;
-    $scope.inProgess = true;
-    $scope.getQuestion();
+  var vm = this;
+  // Bắt đầu mở khảo sát
+  vm.inProgess = false;
+  vm.start = function () {
+    vm.id = 0;
+    vm.inProgess = true;
+    getQuestion();
   };
-  $scope.reset = function () {
-    $scope.inProgess = false;
-  };
-  $scope.getQuestion = function () {
-    $scope.getQueAndAns($scope.id);
+  getQuestion = function () {
+    getQueAndAns(vm.id);
   }
-  $scope.getQueAndAns = function (index) {
+  getQueAndAns = function (index) {
     $http.get(url_questions).then(function (res) {
-      $scope.ques = res.data;
-      $scope.countQues = $scope.ques.length;
-      if ($scope.ques) {
-        $scope.questions = $scope.ques[index].question;
-        $scope.options = $scope.ques[index].answer;
+      var ques = res.data;
+      vm.countQues = ques.length;
+      if (ques) {
+        vm.questions = ques[index].question;
+        vm.options = ques[index].answer;
       }
     });
-    $scope.answerMode = true;
   }
-  $scope.questionss = [];
-  $scope.answers = [];
-  $scope.nextQuestion = function () {
+  var questionss = [];
+  var answers = [];
+  vm.nextQuestion = function () {
     if (!$('input[name=answer]:checked')) {
       alert('Vui lòng chọn câu trả lời!');
     } else {
       var ans = $('input[name=answer]:checked').value;
       var que = $('input[name=que]').value;
-      $scope.questionss.push(que);
-      $scope.answers.push(ans);
-      if ($scope.id < 2) {
-        $scope.id++;
-        $scope.getQuestion();
+      questionss.push(que);
+      answers.push(ans);
+      if (vm.id < 2) {
+        vm.id++;
+        getQuestion();
       } else {
-        if (userIdData) {
+        if (getUserId) {
           answerData = {
-            userAnswer: userIdData.value,
-            question: $scope.questionss,
-            answer: $scope.answers
+            userAnswer: getUserId,
+            question: questionss,
+            answer: answers
           }
           $http.post(url_answer, answerData).then(res => {
             alert('Cảm ơn bạn đã làm khảo sát của chúng tôi!');
           });
         } else {
           answerData = {
-            question: $scope.questionss,
-            answer: $scope.answers
+            question: questionss,
+            answer: answers
           }
           $http.post(url_answer, answerData).then(res => {
             alert('Cảm ơn bạn đã làm khảo sát của chúng tôi!');
           });
-        }
-      }
-    }
-  }
-  $scope.reset();
-}).controller('ProfileController', function ($scope, $rootScope, $http) {
+        };
+      };
+    };
+  };
+});
+
+// Hồ sơ
+app.controller('ProfileController', function ($rootScope, $http) {
   $rootScope.title = 'Hồ Sơ';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  if (!getUserId) {
+  var vm = this;
+  if (!getUserId || !getUserName) {
     window.location.href = "#!home";
   }
-  $scope.signout = function () {
+  vm.signout = function () {
     localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
     location.reload(true);
   }
-  $http.get(url_user + '/' + userIdData.value).then(res => {
-    $scope.userInfo = res.data;
+  $http.get(url_user + '/' + getUserId).then(res => {
+    vm.userInfo = res.data;
   });
-  $scope.updateProfile = function () {
+  vm.updateProfile = function () {
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    $scope.usernameErr = '';
-    $scope.emailErr = '';
-    if (!$scope.userInfo.name) {
-      $scope.usernameErr = 'Không để trống tên đăng nhập';
+    vm.usernameErr = '';
+    vm.emailErr = '';
+    if (!vm.userInfo.name) {
+      vm.usernameErr = 'Không để trống tên đăng nhập';
       return false;
-    } else if (!$scope.userInfo.email) {
-      $scope.emailErr = 'Không để trống email';
+    } else if (!vm.userInfo.email) {
+      vm.emailErr = 'Không để trống email';
       return false;
-    } else if (!emailRegex.test($scope.userInfo.email)) {
-      $scope.emailErr = 'Email sai định dạng';
+    } else if (!emailRegex.test(vm.userInfo.email)) {
+      vm.emailErr = 'Email sai định dạng';
       return false;
     }
-    $http.get(url_user + '?name=' + $scope.userInfo.name).then(res => {
-      $scope.getUserSignin = res.data;
-      if ($scope.getUserSignin && $scope.getUserSignin.length > 0 && $scope.getUserSignin[0].name) {
-        alert('Tên đăng nhập đã tồn tại');
+    var getUserSuccess = false;
+    updatedProfile = function () {
+      var userUpdateData = {
+        name: vm.userInfo.name,
+        email: vm.userInfo.email,
+      };
+      $http.patch(url_user + '/' + getUserId, userUpdateData)
+        .then(res => {
+          alert('Cập Nhật Hồ Sơ Thành Công');
+        });
+    }
+    $http.get(url_user + '?name=' + vm.userInfo.name).then(res => {
+      var getUserSignin = res.data;
+      // Kiểm tra xem get được chưa
+      if (getUserSignin.length > 0 && getUserSignin[0].name) {
+        getUserSuccess = true;
+      }
+      // Nếu không tìm thấy username thì cập nhật username mới cho user.
+      if (!getUserSuccess) {
+        updatedProfile();
       } else {
-        $scope.userUpdateData = {
-          name: $scope.userInfo.name,
-          email: $scope.userInfo.email,
-        };
-        $http.patch(url_user + '/' + userIdData.value, $scope.userUpdateData)
-          .then(res => {
-            alert('Cập Nhật Hồ Sơ Thành Công');
-          });
+        // Kiểm tra nếu username bằng username lưu trên local thì vẫn cập nhật.
+        if (getUserSignin.length > 0 && getUserSignin[0].name === getUserName) {
+          updatedProfile();
+        } else {
+          // Nếu thấy username trùng với username khác thì thông báo
+          alert('Tên đăng nhập đã tồn tại');
+        }
       }
     });
   };
-  $scope.updatePassword = function () {
-    $scope.newpasswordErr = '';
-    $scope.cNewPasswordErr = '';
-    if (!$scope.newPassword) {
-      $scope.newpasswordErr = 'Vui lòng nhập mật khẩu mới';
+
+  vm.updatePassword = function () {
+    vm.passwordOldErr = '';
+    vm.newpasswordErr = '';
+    vm.cNewPasswordErr = '';
+    if (!vm.passwordOld) {
+      vm.passwordOldErr = 'Vui lòng nhập mật khẩu hiện tại';
       return false;
-    } else if (!$scope.cNewPassword) {
-      $scope.cNewPasswordErr = 'Vui lòng nhập lại mật khẩu mới';
+    } else if (vm.passwordOld !== vm.userInfo.password) {
+      vm.passwordOldErr = 'Mật khẩu hiện tại không chính xác';
       return false;
-    } else if ($scope.newPassword !== $scope.cNewPassword) {
-      $scope.cNewPasswordErr = 'Mật khẩu nhập lại chưa khớp';
+    } else if (!vm.newPassword) {
+      vm.newpasswordErr = 'Vui lòng nhập mật khẩu mới';
+      return false;
+    } else if (!vm.cNewPassword) {
+      vm.cNewPasswordErr = 'Vui lòng nhập lại mật khẩu mới';
+      return false;
+    } else if (vm.newPassword !== vm.cNewPassword) {
+      vm.cNewPasswordErr = 'Mật khẩu nhập lại chưa khớp';
       return false;
     }
-    $scope.newPasswordData = {
-      password: $scope.newPassword,
+    var newPasswordData = {
+      password: vm.newPassword,
     };
-    $http.patch(url_user + '/' + userIdData.value, $scope.newPasswordData)
+    $http.patch(url_user + '/' + getUserId, newPasswordData)
       .then(res => {
         alert('Cập Nhật Mật Khẩu Mới Thành Công');
       });
   }
-}).controller('SigninController', function ($scope, $rootScope, $http) {
+});
+
+// Đăng nhập
+app.controller('SigninController', function ($rootScope) {
   $rootScope.title = 'Đăng Nhập';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  if (getUserId) {
+  var vm = this;
+  if (getUserId && getUserName) {
     window.location.href = "#!home";
   } else {
-    $scope.signin = function () {
-      $scope.usernameErr = '';
-      $scope.productNameErr = '';
-      if (!$scope.username) {
-        $scope.usernameErr = 'Vui lòng không để trống tên đăng nhập';
+    vm.signin = function () {
+      vm.usernameErr = '';
+      vm.productNameErr = '';
+      if (!vm.username) {
+        vm.usernameErr = 'Vui lòng không để trống tên đăng nhập';
         return false;
-      } else if (!$scope.password) {
-        $scope.passwordErr = 'Vui lòng không để trống mật khẩu';
+      } else if (!vm.password) {
+        vm.passwordErr = 'Vui lòng không để trống mật khẩu';
         return false;
       }
-      $http.get(url_user + '?name=' + $scope.username + '&password=' + $scope.password).then(res => {
-        $scope.getUserSignin = res.data;
-        if ($scope.getUserSignin && $scope.getUserSignin.length > 0 && $scope.getUserSignin[0].name && $scope.getUserSignin[0].password) {
-          // Set thời gian tồn tại của localStorage userId
-          setWithExpiry("userId", $scope.getUserSignin[0].id, 3600 * 1000);
-          window.location.href = "index.html";
-        } else {
-          alert('Tài khoản không tồn tại');
-        }
-      });
-    }
-  }
-}).controller('SignupController', function ($scope, $rootScope, $http) {
+      // Gọi hàm đăng nhập
+      $rootScope.signin(vm.username, vm.password);
+    };
+  };
+});
+
+// Đăng ký 
+app.controller('SignupController', function ($rootScope, $http) {
   $rootScope.title = 'Đăng Ký';
-  $rootScope.homeActive = null;
-  $rootScope.shopActive = null;
-  $rootScope.aboutActive = null;
-  $rootScope.contactActive = null;
-  $rootScope.surveyActive = null;
-  $rootScope.authActive = null;
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  if (getUserId) {
+  var vm = this;
+  if (getUserId && getUserName) {
     window.location.href = "#!home";
   } else {
-    $scope.signup = function () {
+    vm.signup = function () {
       var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      $scope.usernameErr = '';
-      $scope.productNameErr = '';
-      $scope.emailErr = '';
-      $scope.passwordErr = '';
-      $scope.cpasswordErr = '';
-      if (!$scope.username) {
-        $scope.usernameErr = 'Vui lòng không để trống tên đăng nhập';
+      vm.usernameErr = '';
+      vm.productNameErr = '';
+      vm.emailErr = '';
+      vm.passwordErr = '';
+      vm.cpasswordErr = '';
+      if (!vm.username) {
+        vm.usernameErr = 'Vui lòng không để trống tên đăng nhập';
         return false;
-      } else if (!$scope.email) {
-        $scope.emailErr = 'Vui lòng không để trống email';
+      } else if (!vm.email) {
+        vm.emailErr = 'Vui lòng không để trống email';
         return false;
-      } else if (!emailRegex.test($scope.email)) {
-        $scope.emailErr = 'Email sai định dạng';
+      } else if (!emailRegex.test(vm.email)) {
+        vm.emailErr = 'Email sai định dạng';
         return false;
-      } else if (!$scope.password) {
-        $scope.passwordErr = 'Vui lòng không để trống mật khẩu';
+      } else if (!vm.password) {
+        vm.passwordErr = 'Vui lòng không để trống mật khẩu';
         return false;
-      } else if (!$scope.cpassword) {
-        $scope.cpasswordErr = 'Vui lòng nhập lại mật khẩu';
+      } else if (!vm.cpassword) {
+        vm.cpasswordErr = 'Vui lòng nhập lại mật khẩu';
         return false;
-      } else if ($scope.password !== $scope.cpassword) {
-        $scope.cpasswordErr = 'Mật khẩu chưa khớp';
+      } else if (vm.password !== vm.cpassword) {
+        vm.cpasswordErr = 'Mật khẩu chưa khớp';
         return false;
       }
       // Thực hiện chức năng đăng ký tài khoản
-      $http.get(url_user + '?name=' + $scope.username).then(res => {
+      $http.get(url_user + '?name=' + vm.username).then(res => {
         if (res.data && res.data.length > 0 && res.data[0].name) {
           alert('Tên đăng nhập đã tồn tại');
         } else {
-          $scope.dataUser = {
-            name: $scope.username,
-            email: $scope.email,
-            password: $scope.password,
+          var dataUser = {
+            name: vm.username,
+            email: vm.email,
+            password: vm.password,
           };
-          $http.post(url_user, $scope.dataUser).then(res => {
+          $http.post(url_user, dataUser).then(res => {
             alert('Đăng ký thành công');
-            window.location.href = "#!signin";
+            // Gọi hàm đăng nhập
+            $rootScope.signin(vm.username, vm.password);
           });
         }
       });
     };
   };
-}).controller('AddProductController', function ($scope, $http, $rootScope) {
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  if (!getUserId) {
+});
+
+// Xem và thêm sản phẩm
+app.controller('AddProductController', function ($http, $rootScope) {
+  var vm = this;
+  if (!getUserId || !getUserName) {
     alert('Vui lòng đăng nhập trước khi thực hiện hành động này!');
     window.location.href = "#!signin";
   } else {
     $rootScope.title = 'Thêm Sản Phẩm';
-    $rootScope.homeActive = null;
-    $rootScope.shopActive = null;
-    $rootScope.aboutActive = null;
-    $rootScope.contactActive = null;
-    $rootScope.surveyActive = null;
-    $rootScope.authActive = null;
+    $rootScope.getAllCategories();
     // Lấy tất cả sản phẩm show ra table
     $http.get(url_product)
       .then(function (res) {
-        $scope.getAllProduct = res.data;
-        $scope.productCategories = {};
-        $scope.getAllProduct.forEach(function (product) {
+        vm.getAllProduct = res.data;
+        vm.productCategories = {};
+        vm.getAllProduct.forEach(function (product) {
           $http.get(url_category + '?id=' + product.category)
             .then(function (res) {
-              $scope.productCategories[product.category] = res.data[0].name;
+              vm.productCategories[product.category] = res.data[0].name;
             });
         });
       });
     // Sự kiện sắp xếp dữ liệu trong bảng
-    $scope.changeSortByTable = function (sortByTable) {
-      if ($scope.sortByTable === sortByTable) {
-        $scope.sortByTable = '-' + sortByTable;
+    vm.changeSortByTable = function (sortByTable) {
+      if (vm.sortByTable === sortByTable) {
+        vm.sortByTable = '-' + sortByTable;
       } else {
-        $scope.sortByTable = sortByTable;
+        vm.sortByTable = sortByTable;
       }
     }
-
-    $scope.getSortIcon = function (sortByTable) {
-      if ($scope.sortByTable === sortByTable) {
+    // Thêm icon
+    vm.getSortIcon = function (sortByTable) {
+      if (vm.sortByTable === sortByTable) {
         return 'fa-caret-up ms-1';
       }
       return 'fa-caret-down ms-1';
     };
-
     // Thêm sản phẩm
-    $scope.addProduct = function () {
+    vm.addProduct = function () {
       var productImage = $('#imageShow').getAttribute('src');
-      $scope.productImageErr = '';
-      $scope.productNameErr = '';
-      $scope.productPriceErr = '';
-      $scope.productCategoryErr = '';
-      $scope.productTopErr = '';
-      $scope.productNewErr = '';
-      $scope.productDescribeErr = '';
+      vm.productImageErr = '';
+      vm.productNameErr = '';
+      vm.productPriceErr = '';
+      vm.productCategoryErr = '';
+      vm.productTopErr = '';
+      vm.productNewErr = '';
+      vm.productDescribeErr = '';
       if (!productImage) {
-        $scope.productImageErr = 'Vui lòng thêm ảnh sản phẩm';
+        vm.productImageErr = 'Vui lòng thêm ảnh sản phẩm';
         return false;
-      } else if (!$scope.productName) {
-        $scope.productNameErr = 'Vui lòng nhập tên sản phẩm';
+      } else if (!vm.productName) {
+        vm.productNameErr = 'Vui lòng nhập tên sản phẩm';
         return false;
-      } else if (!$scope.productPrice) {
-        $scope.productPriceErr = 'Vui lòng thêm giá sản phẩm';
+      } else if (!vm.productPrice) {
+        vm.productPriceErr = 'Vui lòng thêm giá sản phẩm';
         return false;
-      } else if ($scope.productPrice <= 0) {
-        $scope.productPriceErr = 'Giá tiền phải lớn hơn 0';
+      } else if (vm.productPrice <= 0) {
+        vm.productPriceErr = 'Giá tiền phải lớn hơn 0';
         return false;
-      } else if (!$scope.productCategory) {
-        $scope.productCategoryErr = 'Vui lòng chọn loại sản phẩm';
+      } else if (!vm.productCategory) {
+        vm.productCategoryErr = 'Vui lòng chọn loại sản phẩm';
         return false;
-      } else if (!$scope.productTop) {
-        $scope.productTopErr = 'Vui lòng chọn có hoặc không';
+      } else if (!vm.productTop) {
+        vm.productTopErr = 'Vui lòng chọn có hoặc không';
         return false;
-      } else if (!$scope.productNew) {
-        $scope.productNewErr = 'Vui lòng chọn có hoặc không';
+      } else if (!vm.productNew) {
+        vm.productNewErr = 'Vui lòng chọn có hoặc không';
         return false;
-      } else if (!$scope.productDescribe) {
-        $scope.productDescribeErr = 'Vui lòng thêm mô tả sản phẩm';
+      } else if (!vm.productDescribe) {
+        vm.productDescribeErr = 'Vui lòng thêm mô tả sản phẩm';
         return false;
       } else {
-        $scope.productData = {
-          name: $scope.productName,
+        vm.productData = {
+          name: vm.productName,
           image: productImage,
-          price: $scope.productPrice,
-          category: $scope.productCategory,
-          top: $scope.productTop,
-          new: $scope.productNew,
-          describe: $scope.productDescribe
+          price: vm.productPrice,
+          category: vm.productCategory,
+          top: vm.productTop,
+          new: vm.productNew,
+          describe: vm.productDescribe
         };
-        $http.post(url_product, $scope.productData)
+        $http.post(url_product, vm.productData)
           .then(res => {
             alert('Thêm Sản Phẩm Thành Công');
           })
       };
     };
     // Xóa dữ liệu trong form
-    $scope.resetForm = function () {
+    vm.resetForm = function () {
       $('#imageShow').src = '';
-      $('#imageProduct').value = '';
-      $scope.productName = '';
-      $scope.productPrice = '';
-      $scope.productCategory = '';
-      $scope.productTop = '';
-      $scope.productNew = '';
-      $scope.productDescribe = '';
+      const form = $('#form');
+      form.reset();
     }
     // Xóa sản phẩm
-    $scope.deleteProduct = function (productId) {
+    vm.deleteProduct = function (productId) {
       var confirmDelete = confirm('Bạn Có Chắc Chắn Muốn Xóa Sản Phẩm Này?');
       if (confirmDelete) {
         $http.delete(url_product + '/' + productId)
@@ -572,117 +495,110 @@ app.controller('HomeController', function ($scope, $rootScope, $http) {
       }
     };
   }
-}).controller('UpdateProductController', function ($scope, $rootScope, $routeParams, $http) {
-  $rootScope.issetUserId = $rootScope.issetSignin(getUserId);
-  $rootScope.getAllCategories();
-  $rootScope.getAllProductSearch();
-  if (!getUserId) {
+});
+
+// Cập nhật sản phẩm
+app.controller('UpdateProductController', function ($scope, $rootScope, $routeParams, $http) {
+  if (!getUserId || !getUserName) {
     window.location.href = "#!home";
   } else {
     $rootScope.title = 'Cập Nhật Sản Phẩm';
-    $rootScope.homeActive = null;
-    $rootScope.shopActive = null;
-    $rootScope.aboutActive = null;
-    $rootScope.contactActive = null;
-    $rootScope.surveyActive = null;
-    $rootScope.authActive = null;
-    $http.get(url_category)
-      .then(function (res) {
-        $scope.categories = res.data;
-      });
-    // Lấy tất cả sản phẩm show ra table
-    $http.get(url_product + '/' + $routeParams.id)
-      .then(function (res) {
-        $scope.getProductUpdate = res.data;
-        $scope.productNameUpdate = res.data.name;
-        $scope.productPriceUpdate = res.data.price;
-        $scope.productCategoryUpdate = res.data.category;
-        $scope.productTopUpdate = res.data.top;
-        $scope.productNewUpdate = res.data.new;
-        $scope.productDescribeUpdate = res.data.describe;
-      });
+    var vm = this;
+    $rootScope.getProductOne($routeParams.id);
+    $rootScope.getAllCategories();
     // Sửa sản phẩm
-    $scope.updateProduct = function () {
-      var productImageUpdate = $('#imageShowUpdate').getAttribute('src');
-      $scope.productNameUpdateErr = '';
-      $scope.productPriceUpdateErr = '';
-      $scope.productDescribeUpdateErr = '';
-      if (!$scope.productNameUpdate) {
-        $scope.productNameUpdateErr = 'Vui lòng nhập tên sản phẩm';
+    vm.updateProduct = function () {
+      var productImage = $('#imageShow').getAttribute('src');
+      vm.productNameUpdateErr = '';
+      vm.productPriceUpdateErr = '';
+      vm.productDescribeUpdateErr = '';
+      if (!$scope.productName) {
+        vm.productNameUpdateErr = 'Vui lòng nhập tên sản phẩm';
         return false;
-      } else if (!$scope.productPriceUpdate) {
-        $scope.productPriceUpdateErr = 'Vui lòng thêm giá sản phẩm';
+      } else if (!$scope.productPrice) {
+        vm.productPriceUpdateErr = 'Vui lòng thêm giá sản phẩm';
         return false;
-      } else if ($scope.productPriceUpdate <= 0) {
-        $scope.productPriceUpdateErr = 'Giá tiền phải lớn hơn 0';
+      } else if ($scope.productPrice <= 0) {
+        vm.productPriceUpdateErr = 'Giá tiền phải lớn hơn 0';
         return false;
-      } else if (!$scope.productDescribeUpdate) {
-        $scope.productDescribeUpdateErr = 'Vui lòng thêm mô tả sản phẩm';
+      } else if (!$scope.productDescribe) {
+        vm.productDescribeUpdateErr = 'Vui lòng thêm mô tả sản phẩm';
         return false;
       }
-      $scope.productDataUpdate = {
-        name: $scope.productNameUpdate,
-        image: productImageUpdate,
-        price: $scope.productPriceUpdate,
-        category: $scope.productCategoryUpdate,
-        top: $scope.productTopUpdate,
-        new: $scope.productNewUpdate,
-        describe: $scope.productDescribeUpdate
+      var productDataUpdate = {
+        name: $scope.productName,
+        image: productImage,
+        price: $scope.productPrice,
+        category: $scope.productCategory,
+        top: $scope.productTop,
+        new: $scope.productNew,
+        describe: $scope.productDescribe
       };
-      $http.put(url_product + '/' + $routeParams.id, $scope.productDataUpdate)
+      $http.patch(url_product + '/' + $routeParams.id, productDataUpdate)
         .then(res => {
           alert('Cập Nhật Sản Phẩm Thành Công');
           window.location.href = '#!admin';
         });
     };
   };
-}).config(function ($routeProvider) {
+});
+
+// Route
+app.config(function ($routeProvider) {
   $routeProvider
-    .when('/home', {
-      templateUrl: './views/home/home.html',
+    .when('/', {
+      templateUrl: './views/home/home.html?' + Math.random(),
       controller: 'HomeController'
     })
     .when('/shop', {
-      templateUrl: './views/shop/shop.html',
-      controller: 'ShopController'
+      templateUrl: './views/shop/shop.html?' + Math.random(),
+      controller: 'ShopController',
+      controllerAs: 'Shop'
     })
     .when('/detail/:id', {
-      templateUrl: './views/shop/detail.html',
-      controller: 'DetailController'
+      templateUrl: './views/shop/detail.html?' + Math.random(),
+      controller: 'DetailController',
+      controllerAs: 'Detail'
     })
     .when('/about', {
-      templateUrl: './views/about/about.html',
+      templateUrl: './views/about/about.html?' + Math.random(),
       controller: 'AboutController'
     })
     .when('/contact', {
-      templateUrl: './views/contact/contact.html',
+      templateUrl: './views/contact/contact.html?' + Math.random(),
       controller: 'ContactController'
     })
     .when('/profile', {
-      templateUrl: './views/profile/profile.html',
-      controller: 'ProfileController'
+      templateUrl: './views/profile/profile.html?' + Math.random(),
+      controller: 'ProfileController',
+      controllerAs: 'Profile'
     })
     .when('/survey', {
-      templateUrl: './views/survey/survey.html',
-      controller: 'SurveyController'
+      templateUrl: './views/survey/survey.html?' + Math.random(),
+      controller: 'SurveyController',
+      controllerAs: 'Survey'
     })
     .when('/signin', {
-      templateUrl: './views/auth/signin.html',
-      controller: 'SigninController'
+      templateUrl: './views/auth/signin.html?' + Math.random(),
+      controller: 'SigninController',
+      controllerAs: 'Signin'
     })
     .when('/signup', {
-      templateUrl: './views/auth/signup.html',
-      controller: 'SignupController'
+      templateUrl: './views/auth/signup.html?' + Math.random(),
+      controller: 'SignupController',
+      controllerAs: 'Signup'
     })
     .when('/admin', {
-      templateUrl: './views/admin/addProduct.html',
-      controller: 'AddProductController'
+      templateUrl: './views/admin/addProduct.html?' + Math.random(),
+      controller: 'AddProductController',
+      controllerAs: 'Admin'
     })
     .when('/update/:id', {
-      templateUrl: './views/admin/updateProduct.html',
-      controller: 'UpdateProductController'
+      templateUrl: './views/admin/updateProduct.html?' + Math.random(),
+      controller: 'UpdateProductController',
+      controllerAs: 'Update'
     })
     .otherwise({
-      redirectTo: '/home'
+      redirectTo: '/'
     });
 });

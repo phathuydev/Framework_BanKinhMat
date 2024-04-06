@@ -6,26 +6,38 @@
   </div>
   <div class="modal-body p-0">
     <div class="table-responsive border border-dark border-top-0">
-      <table class="table m-0 btn-default">
+      <table class="table m-0 bg-secondary">
         <thead>
           <tr class="align-middle">
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('name')">Tên
-              <i class="fa" ng-class="getSortIcon('name')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('image')">Ảnh
-              <i class="fa" ng-class="getSortIcon('image')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('price')">Giá
-              <i class="fa" ng-class="getSortIcon('price')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('category')">
-              Loại <i class="fa" ng-class="getSortIcon('category')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('top')">Hot
-              <i class="fa" ng-class="getSortIcon('top')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16" ng-click="changeSortByTable('new')">Mới
-              <i class="fa" ng-class="getSortIcon('new')"></i></th>
-            <th scope="col" width="12.5%" class="text-center text-white fs-16">Hành Động</th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('name')">Tên
+              <i class="fa" ng-class="Admin.getSortIcon('name')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('image')">Ảnh
+              <i class="fa" ng-class="Admin.getSortIcon('image')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('price')">Giá
+              <i class="fa" ng-class="Admin.getSortIcon('price')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('category')">Loại
+              <i class="fa" ng-class="Admin.getSortIcon('category')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('top')">Hot
+              <i class="fa" ng-class="Admin.getSortIcon('top')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse"
+              ng-click="Admin.changeSortByTable('new')">Mới
+              <i class="fa" ng-class="Admin.getSortIcon('new')"></i>
+            </th>
+            <th scope="col" width="12.5%" class="text-center text-white fs-16 _mouse">Hành Động</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="align-middle" ng-repeat="item in getAllProduct | orderBy : sortByTable">
+          <tr class="align-middle" ng-repeat="item in Admin.getAllProduct | orderBy : Admin.sortByTable">
             <td>
               <div class="text-center"><a href="#!detail/{{item.id}}" class="text-danger fs-16"
                   style="color: rgb(255, 255, 255) !important;">{{item.name}}</a></div>
@@ -37,12 +49,11 @@
               <div class="fs-16 text-center text-white">{{item.price | number : 0}} VND</div>
             </td>
             <td>
-              <div class="fs-16 text-center text-white">{{productCategories[item.category]}}</div>
+              <div class="fs-16 text-center text-white">{{Admin.productCategories[item.category]}}</div>
             </td>
             <td>
               <div class="fs-16 text-center" style="color: rgb(255, 0, 0); font-weight: bold !important;">{{item.top ==
-                1 ? 'Hot' :
-                ''}}</div>
+                1 ? 'Hot' : ''}}</div>
             </td>
             <td>
               <div class="fs-16 text-center text-white">{{item.new == 1 ? 'Mới' : ''}}</div>
@@ -50,7 +61,7 @@
             <td>
               <div class="text-center">
                 <a href="#!update/{{item.id}}"><button class="btn btn-warning mb-1">Sửa</button></a>
-                <button class="btn btn-danger mb-1" ng-click="deleteProduct(item.id)">Xóa</button>
+                <button class="btn btn-danger mb-1" ng-click="Admin.deleteProduct(item.id)">Xóa</button>
               </div>
             </td>
           </tr>
@@ -62,13 +73,13 @@
   <div class="modal anthanhcuon fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="addUserLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content btn-default">
+      <div class="modal-content bg-secondary">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="addUserLabel">Thêm Sản Phẩm</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post">
+          <form method="post" id="form">
             <div class="m-3 d-flex justify-content-center">
               <img id="imageShow" src="" width="150" class="fs-16" alt="Ảnh Sản Phẩm">
             </div>
@@ -76,18 +87,17 @@
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Ảnh Sản Phẩm <span style="color: yellow;">(*)</span></label>
-                  <input type="file" class="form-control fs-16" onchange="previewFile()" id="imageProduct"
-                    accept=".jpg, .png">
+                  <input type="file" class="form-control fs-16" onchange="previewFile()" id="imageProduct" accept=".jpg, .png">
                   <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
-                    {{productImageErr}}
+                    {{Admin.productImageErr}}
                   </div>
                 </div>
               </div>
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Tên Sản Phẩm <span style="color: yellow;">(*)</span></label>
-                  <input type="text" class="form-control fs-16" ng-model="productName" placeholder="Điền tên sản phẩm">
-                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNameErr}}
+                  <input type="text" class="form-control fs-16" ng-model="Admin.productName" placeholder="Điền tên sản phẩm">
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{Admin.productNameErr}}
                   </div>
                 </div>
               </div>
@@ -96,21 +106,21 @@
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Giá Sản Phẩm <span style="color: yellow;">(*)</span></label>
-                  <input type="number" class="form-control fs-16" ng-model="productPrice"
+                  <input type="number" class="form-control fs-16" ng-model="Admin.productPrice"
                     placeholder="Điền giá sản phẩm">
                   <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
-                    {{productPriceErr}}
+                    {{Admin.productPriceErr}}
                   </div>
                 </div>
               </div>
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Danh Mục <span style="color: yellow;">(*)</span></label>
-                  <select class="form-select" ng-model="productCategory">
+                  <select class="form-select" ng-model="Admin.productCategory">
                     <option ng-repeat="item in categories" value="{{item.id}}">{{item.name}}</option>
                   </select>
                   <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">
-                    {{productCategoryErr}}
+                    {{Admin.productCategoryErr}}
                   </div>
                 </div>
               </div>
@@ -119,22 +129,22 @@
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Bán Chạy <span style="color: yellow;">(*)</span></label>
-                  <select class="form-select" ng-model="productTop">
+                  <select class="form-select" ng-model="Admin.productTop">
                     <option value="0">Không</option>
                     <option value="1">Có</option>
                   </select>
-                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productTopErr}}
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{Admin.productTopErr}}
                   </div>
                 </div>
               </div>
               <div class="col-lg-6 col-sm-12">
                 <div class="mb-2">
                   <label for="" class="mb-1 fs-16">Sản Phẩm Mới <span style="color: yellow;">(*)</span></label>
-                  <select class="form-select" ng-model="productNew">
+                  <select class="form-select" ng-model="Admin.productNew">
                     <option value="0">Không</option>
                     <option value="1">Có</option>
                   </select>
-                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productNewErr}}
+                  <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{Admin.productNewErr}}
                   </div>
                 </div>
               </div>
@@ -142,15 +152,15 @@
             <div class="mb-2">
               <label for="" class="mb-1 fs-16">Mô Tả <span style="color: yellow;">(*)</span></label>
               <textarea class="form-control fs-16" rows="3" placeholder="Thêm mô tả cho sản phẩm"
-                ng-model="productDescribe"></textarea>
-              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{productDescribeErr}}
+                ng-model="Admin.productDescribe"></textarea>
+              <div style="color: yellow; font-size: 16px !important; margin-top: 5px !important;">{{Admin.productDescribeErr}}
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" ng-click="resetForm()">Đặt Lại</button>
-          <button type="button" class="btn btn-primary" ng-click="addProduct()">Thêm</button>
+          <button type="button" class="btn btn-danger" ng-click="Admin.resetForm()">Đặt Lại</button>
+          <button type="button" class="btn btn-primary" ng-click="Admin.addProduct()">Thêm</button>
         </div>
       </div>
     </div>
